@@ -27,6 +27,8 @@ public class PointTest {
 		assertThat(Point.createWithPair("(4, 10)-(13,13)")).containsExactly(new Point(4, 10), new Point(13, 13));
 		assertThat(Point.createWithPair("(4, 10) - (13,13)")).containsExactly(new Point(4, 10), new Point(13, 13));
 		assertThat(Point.createWithPair("(4, 10) - ( 13,13 )")).containsExactly(new Point(4, 10), new Point(13, 13));
+		assertThat(Point.createWithPair("(10, 10) - ( 22,10 )-(22, 18)-(10, 18)"))
+				.containsExactly(new Point(10, 10), new Point(22, 10), new Point(22, 18), new Point(10, 18));
 	}
 
 	@Test
@@ -47,5 +49,6 @@ public class PointTest {
 		assertThat(new Point(1, 1).calculateDistance(new Point(1, 3))).isEqualTo(2);
 		assertThat(new Point(1, 1).calculateDistance(new Point(2, 2))).isEqualTo(1.414, offset(0.01));
 	}
+
 
 }

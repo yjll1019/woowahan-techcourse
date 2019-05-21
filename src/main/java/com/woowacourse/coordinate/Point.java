@@ -32,19 +32,9 @@ public class Point implements Comparable<Point> {
 	}
 
 	public static List<Point> createWithPair(String s) {
-		String[] segments = s.split("\\)[\\s]*-[\\s]*\\(");
-		List<Integer> coords1 = Arrays.asList(segments[0].substring(1).split(","))
-				.stream()
-				.map(String::trim)
-				.map(Integer::valueOf)
+		return Arrays.stream(s.split("-"))
+				.map(Point::new)
 				.collect(Collectors.toList());
-
-		List<Integer> coords2 = Arrays.asList(segments[1].substring(0, segments[1].length() - 1).split(","))
-				.stream()
-				.map(String::trim)
-				.map(Integer::valueOf)
-				.collect(Collectors.toList());
-		return Arrays.asList(new Point(coords1.get(0), coords1.get(1)), new Point(coords2.get(0), coords2.get(1)));
 	}
 
 
@@ -56,8 +46,22 @@ public class Point implements Comparable<Point> {
 		return this.x == x;
 	}
 
+	public boolean matchX(Point p) {
+		return this.x == p.x;
+	}
+
 	public boolean matchY(int y) {
 		return this.y == y;
+	}
+
+	public boolean matchY(Point p) {
+		return this.y == p.y;
+	}
+
+	public double calculateDistance(Point point) {
+		double dx = Math.abs(point.x - x);
+		double dy = Math.abs(point.y - y);
+		return Math.sqrt(dx * dx + dy * dy);
 	}
 
 	@Override
@@ -78,10 +82,9 @@ public class Point implements Comparable<Point> {
 		return Objects.hash(x, y);
 	}
 
-	public double calculateDistance(Point point) {
-		double dx = Math.abs(point.x - x);
-		double dy = Math.abs(point.y - y);
-		return Math.sqrt(dx * dx + dy * dy);
+	@Override
+	public String toString() {
+		return String.format("Point { x: %d, y: %d }", x, y);
 	}
 
 	@Override
