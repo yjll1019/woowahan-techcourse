@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class RentCompany {
 	private static final String NEWLINE = System.getProperty("line.separator");
 
-	private final List<RentCar> rentCars;
+	private final List<Car> rentCars;
 
 	private RentCompany() {
 		rentCars = new ArrayList<>();

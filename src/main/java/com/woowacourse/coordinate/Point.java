@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Point {
+public class Point implements Comparable<Point> {
 	private static final int MIN = 0;
 	private static final int MAX = 24;
 
@@ -52,6 +52,14 @@ public class Point {
 		return s.startsWith("(") && s.endsWith(")");
 	}
 
+	public boolean matchX(int x) {
+		return this.x == x;
+	}
+
+	public boolean matchY(int y) {
+		return this.y == y;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -74,5 +82,13 @@ public class Point {
 		double dx = Math.abs(point.x - x);
 		double dy = Math.abs(point.y - y);
 		return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	@Override
+	public int compareTo(Point point) {
+		if (this.y == point.y) {
+			return Integer.compare(this.x, point.x);
+		}
+		return Integer.compare(this.y, point.y);
 	}
 }
