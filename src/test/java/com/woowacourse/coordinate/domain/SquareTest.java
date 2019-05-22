@@ -1,9 +1,6 @@
-package com.woowacourse.coordinate;
+package com.woowacourse.coordinate.domain;
 
 import java.util.Arrays;
-
-import com.woowacourse.coordinate.domain.Point;
-import com.woowacourse.coordinate.domain.Square;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +34,7 @@ public class SquareTest {
 
 	@Test
 	void duplicatePoints() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(PointDuplicateException.class, () -> {
 			new Square(Arrays.asList(new Point(5, 10), new Point(5, 10), new Point(3, 8), new Point(3, 8)));
 		});
 	}
