@@ -46,16 +46,8 @@ public class Point {
 		return this.x == x;
 	}
 
-	public boolean matchX(Point p) {
-		return this.x == p.x;
-	}
-
 	public boolean matchY(int y) {
 		return this.y == y;
-	}
-
-	public boolean matchY(Point p) {
-		return this.y == p.y;
 	}
 
 	public double calculateDistance(Point point) {

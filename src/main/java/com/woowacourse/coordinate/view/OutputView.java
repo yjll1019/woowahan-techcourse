@@ -1,6 +1,5 @@
 package com.woowacourse.coordinate.view;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
