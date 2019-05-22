@@ -18,14 +18,8 @@ public class Square extends Figure {
 	}
 
 	private boolean isParallelWithAxis(List<Point> points) {
-		for (Point p : points) {
-			if (filterMatchXPoints(points, p).size() != 2 ||
-					filterMatchYPoints(points, p).size() != 2) {
-				return false;
-			}
-		}
-
-		return true;
+		return points.stream()
+				.allMatch(p -> filterMatchXPoints(points, p).size() == 2 && filterMatchYPoints(points, p).size() == 2);
 	}
 
 	private List<Point> filterMatchXPoints(List<Point> points, Point x) {
@@ -46,7 +40,7 @@ public class Square extends Figure {
 		int d1 = (int) filteredPoints.get(0).calculateDistance(filteredPoints.get(1));
 		filteredPoints = filterMatchYPoints(points, points.get(0));
 		int d2 = (int) filteredPoints.get(0).calculateDistance(filteredPoints.get(1));
-		return (double)d1 * d2;
+		return (double) d1 * d2;
 	}
 
 	@Override

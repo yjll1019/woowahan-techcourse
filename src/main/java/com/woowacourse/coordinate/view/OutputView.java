@@ -37,14 +37,17 @@ public class OutputView {
 	private static void printPoint(StringBuilder sb, List<Point> pointsToPrint) {
 		for (int j = 0; j <= 24; ++j) {
 			final int currentX = j;
-			if (pointsToPrint.stream()
-					.filter(p -> p.matchX(currentX))
-					.count() > 0) {
-				sb.append(" ·");
-				continue;
-			}
-			sb.append("  ");
+			sb.append(getPointString(pointsToPrint, currentX));
 		}
+	}
+
+	private static String getPointString(List<Point> pointsToPrint, int currentX) {
+		if (pointsToPrint.stream()
+				.filter(p -> p.matchX(currentX))
+				.count() > 0) {
+			return " ·";
+		}
+		return "  ";
 	}
 
 	private static void printXAxis(StringBuilder sb) {
@@ -53,7 +56,7 @@ public class OutputView {
 			sb.append("──");
 		}
 		sb.append("─\n  ");
-		for(int i = 0; i <= 24; i++) {
+		for (int i = 0; i <= 24; i++) {
 			sb.append(getXAxisString(i));
 		}
 	}
