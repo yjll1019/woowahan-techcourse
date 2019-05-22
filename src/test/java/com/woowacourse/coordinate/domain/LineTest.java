@@ -26,13 +26,13 @@ public class LineTest {
 
 	@Test
 	void calculateLength() {
-		assertThat(new Line(Arrays.asList(new Point(3, 3), new Point(6, 3))).calculateLength())
+		assertThat(new Line(Arrays.asList(new Point(3, 3), new Point(6, 3))).calculateArea())
 				.isEqualTo(3);
 	}
 
 	@Test
 	void duplicatePoints() {
-		assertThrows(PointDuplicateException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Line(Arrays.asList(new Point(5, 10), new Point(5, 10)));
 		});
 	}

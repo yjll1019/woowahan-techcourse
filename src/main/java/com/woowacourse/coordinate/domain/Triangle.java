@@ -7,8 +7,6 @@ import java.util.Optional;
 public class Triangle extends Figure {
 	public static final int NUM_OF_POINTS = 3;
 
-	private List<Point> points;
-
 	public Triangle(List<Point> points) {
 		super(points, NUM_OF_POINTS);
 		checkIfValidTriangle(points);
@@ -26,14 +24,14 @@ public class Triangle extends Figure {
 		}
 
 		if (!maybeSlope1.isPresent() && !maybeSlope2.isPresent()) {
-			throw new IllegalArgumentException("Three points are on same line");
+			throw new IllegalArgumentException("삼각형을 만들 수 없는 좌표입니다.");
 		}
 
 	}
 
 	private void throwIfSlopeEqual(double slope1, double slope2) {
 		if (slope1 == slope2) {
-			throw new IllegalArgumentException("Three points are on same line");
+			throw new IllegalArgumentException("삼각형을 만들 수 없는 좌표입니다.");
 		}
 	}
 

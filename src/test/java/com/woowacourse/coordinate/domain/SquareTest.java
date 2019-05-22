@@ -34,7 +34,7 @@ public class SquareTest {
 
 	@Test
 	void duplicatePoints() {
-		assertThrows(PointDuplicateException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Square(Arrays.asList(new Point(5, 10), new Point(5, 10), new Point(3, 8), new Point(3, 8)));
 		});
 	}

@@ -7,8 +7,6 @@ import java.util.Objects;
 public class Square extends Figure {
 	public static final int NUM_OF_POINTS = 4;
 
-	private final List<Point> points;
-
 	public Square(List<Point> points) {
 		super(points, NUM_OF_POINTS);
 		checkIfSquare(points);
@@ -29,7 +27,7 @@ public class Square extends Figure {
 		}
 		double angle = p.calculateAngle(points.get(0), maxDistancePoint);
 		if (angle != 90) {
-			throw new IllegalArgumentException("Not a square!");
+			throw new IllegalArgumentException("사각형이 아닙니다.");
 		}
 	}
 

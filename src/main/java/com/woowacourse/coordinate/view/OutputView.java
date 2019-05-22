@@ -3,6 +3,7 @@ package com.woowacourse.coordinate.view;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.woowacourse.coordinate.domain.Line;
 import com.woowacourse.coordinate.domain.Point;
 import com.woowacourse.coordinate.domain.Shape;
 
@@ -66,11 +67,15 @@ public class OutputView {
 		return "  ";
 	}
 
-	public static void printDistance(double distance) {
+	private static void printDistance(double distance) {
 		System.out.println(String.format("두 점 사이의 거리는 %f", distance));
 	}
 
 	public static void printShape(Shape s) {
+		if(s instanceof Line) {
+			printDistance(s.calculateArea());
+			return;
+		}
 		System.out.println(String.format("%s 넓이는 %.1f", s, s.calculateArea()));
 	}
 

@@ -1,21 +1,13 @@
 package com.woowacourse.coordinate.domain;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
-public class Line {
+public class Line extends Figure {
 	public static final int NUM_OF_POINTS = 2;
 
-	private final List<Point> points;
-
 	public Line(List<Point> points) {
-		if(points.size() != NUM_OF_POINTS) {
-			throw new IllegalArgumentException("Invalid size of points");
-		}
-		if(new HashSet<>(points).size() != NUM_OF_POINTS) {
-			throw new PointDuplicateException();
-		}
+		super(points, NUM_OF_POINTS);
 		this.points = points;
 	}
 
@@ -36,7 +28,8 @@ public class Line {
 		return Objects.hash(points);
 	}
 
-	public double calculateLength() {
+	@Override
+	public double calculateArea() {
 		return points.get(0).calculateDistance(points.get(1));
 	}
 }
