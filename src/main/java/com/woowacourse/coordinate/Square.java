@@ -1,19 +1,16 @@
 package com.woowacourse.coordinate;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Square {
+public class Square extends Figure {
 	public static final int NUM_OF_POINTS = 4;
 
 	private final List<Point> points;
 
 	public Square(List<Point> points) {
-		if (new HashSet<>(points).size() != NUM_OF_POINTS) {
-			throw new IllegalArgumentException("Invalid size of points");
-		}
+		super(points, NUM_OF_POINTS);
 		if (!isParallelWithAxis(points)) {
 			throw new IllegalArgumentException("Invalid set of points");
 		}
@@ -43,12 +40,13 @@ public class Square {
 				.collect(Collectors.toList());
 	}
 
-	public int calculateArea() {
+	@Override
+	public double calculateArea() {
 		List<Point> filteredPoints = filterMatchXPoints(points, points.get(0));
 		int d1 = (int) filteredPoints.get(0).calculateDistance(filteredPoints.get(1));
 		filteredPoints = filterMatchYPoints(points, points.get(0));
 		int d2 = (int) filteredPoints.get(0).calculateDistance(filteredPoints.get(1));
-		return d1 * d2;
+		return (double)d1 * d2;
 	}
 
 	@Override
@@ -66,6 +64,11 @@ public class Square {
 	@Override
 	public int hashCode() {
 		return Objects.hash(points);
+	}
+
+	@Override
+	public String toString() {
+		return "사각형";
 	}
 
 }

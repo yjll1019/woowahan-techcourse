@@ -66,12 +66,8 @@ public class OutputView {
 		System.out.println(String.format("두 점 사이의 거리는 %f", distance));
 	}
 
-	public static void printSquareArea(int squareArea) {
-		System.out.println(String.format("사각형 넓이는 %d", squareArea));
-	}
-
-	public static void printTriangleArea(double triangleArea) {
-		System.out.println(String.format("삼각형 넓이는 %.1f", triangleArea));
+	public static void printShape(Shape s) {
+		System.out.println(String.format("%s 넓이는 %.1f", s, s.calculateArea()));
 	}
 
 	public static void printError(String msg) {

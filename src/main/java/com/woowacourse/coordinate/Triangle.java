@@ -1,20 +1,17 @@
 package com.woowacourse.coordinate;
 
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Triangle {
+public class Triangle extends Figure {
 	public static final int NUM_OF_POINTS = 3;
 
 	private List<Point> points;
 
 	public Triangle(List<Point> points) {
-		if (new HashSet<>(points).size() != NUM_OF_POINTS) {
-			throw new IllegalArgumentException("Invalid size of points");
-		}
+		super(points, NUM_OF_POINTS);
 
 		checkIfValidTriangle(points);
 		this.points = points;
@@ -42,6 +39,7 @@ public class Triangle {
 		}
 	}
 
+	@Override
 	public double calculateArea() {
 		double lengthA = points.get(0).calculateDistance(points.get(1));
 		double lengthB = points.get(1).calculateDistance(points.get(2));
@@ -65,5 +63,10 @@ public class Triangle {
 	@Override
 	public int hashCode() {
 		return Objects.hash(points);
+	}
+
+	@Override
+	public String toString() {
+		return "삼각형";
 	}
 }

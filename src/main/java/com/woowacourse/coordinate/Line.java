@@ -11,7 +11,7 @@ public class Line {
 
 	public Line(List<Point> points) {
 		if(new HashSet<>(points).size() != NUM_OF_POINTS) {
-			throw new IllegalArgumentException("Invalid size of points");
+			throw new PointDuplicateException();
 		}
 		this.points = points;
 	}
