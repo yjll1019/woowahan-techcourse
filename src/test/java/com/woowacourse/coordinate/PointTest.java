@@ -51,4 +51,11 @@ public class PointTest {
 	}
 
 
+	@Test
+	void calculateSlope() {
+		assertThat(new Point(1,1).calculateSlope(new Point(3,3)).get()).isEqualTo(1);
+		assertThat(new Point(1,1).calculateSlope(new Point(5,2)).get()).isEqualTo(0.25, offset(0.01));
+		assertThat(new Point(1,1).calculateSlope(new Point(5,1)).get()).isEqualTo(0);
+		assertThat(new Point(1,1).calculateSlope(new Point(1,6)).isPresent()).isFalse();
+	}
 }

@@ -3,6 +3,7 @@ package com.woowacourse.coordinate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Point implements Comparable<Point> {
@@ -62,6 +63,13 @@ public class Point implements Comparable<Point> {
 		double dx = Math.abs(point.x - x);
 		double dy = Math.abs(point.y - y);
 		return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	public Optional<Double> calculateSlope(Point p) {
+		if (p.x == this.x) {
+			return Optional.ofNullable(null);
+		}
+		return Optional.of(Math.abs((p.y - this.y) / (double)(p.x - this.x)));
 	}
 
 	@Override
