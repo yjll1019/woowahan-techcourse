@@ -1,9 +1,11 @@
-package com.woowacourse;
+package com.woowacourse.coordinate;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.woowacourse.coordinate.*;
+import com.woowacourse.coordinate.domain.*;
+import com.woowacourse.coordinate.view.InputView;
+import com.woowacourse.coordinate.view.OutputView;
 
 public class AppMain {
 	public static void main(String[] args) {

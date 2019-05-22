@@ -1,8 +1,11 @@
-package com.woowacourse.coordinate;
+package com.woowacourse.coordinate.view;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.woowacourse.coordinate.domain.Point;
+import com.woowacourse.coordinate.domain.Shape;
 
 public class OutputView {
 
