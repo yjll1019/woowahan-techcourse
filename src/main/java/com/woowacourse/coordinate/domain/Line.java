@@ -10,6 +10,9 @@ public class Line {
 	private final List<Point> points;
 
 	public Line(List<Point> points) {
+		if(points.size() != NUM_OF_POINTS) {
+			throw new IllegalArgumentException("Invalid size of points");
+		}
 		if(new HashSet<>(points).size() != NUM_OF_POINTS) {
 			throw new PointDuplicateException();
 		}

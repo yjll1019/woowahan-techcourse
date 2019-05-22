@@ -32,7 +32,7 @@ public class LineTest {
 
 	@Test
 	void duplicatePoints() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(PointDuplicateException.class, () -> {
 			new Line(Arrays.asList(new Point(5, 10), new Point(5, 10)));
 		});
 	}
