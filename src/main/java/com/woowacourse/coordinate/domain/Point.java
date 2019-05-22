@@ -14,9 +14,7 @@ public class Point {
 	private int y;
 
 	public Point(int x, int y) {
-		if (x <= MIN || x > MAX || y <= MIN || y > MAX) {
-			throw new IllegalArgumentException(String.format("Invalid range: %d, %d", x, y));
-		}
+		checkRange(x, y);
 		this.x = x;
 		this.y = y;
 	}
@@ -24,12 +22,19 @@ public class Point {
 	public Point(String str) {
 		str = str.trim();
 		if (!isSurroundedWithParenthesis(str)) {
-			throw new IllegalArgumentException("Invalid string for create point: " + str);
+			throw new IllegalArgumentException("유효하지 않은 좌표 입력입니다.");
 		}
 
 		String[] segments = str.split("[,()]");
 		x = Integer.valueOf(segments[1].trim());
 		y = Integer.valueOf(segments[2].trim());
+		checkRange(x, y);
+	}
+
+	private void checkRange(int x, int y) {
+		if (x <= MIN || x > MAX || y <= MIN || y > MAX) {
+			throw new IllegalArgumentException(String.format("범위를 벗어난 좌표입니다 { x: %d, y: %d }", x, y));
+		}
 	}
 
 	public static List<Point> createWithPair(String s) {

@@ -39,6 +39,7 @@ public class PointTest {
 		assertThrows(IllegalArgumentException.class, () -> new Point(10, -1));
 		assertThrows(IllegalArgumentException.class, () -> new Point(5, 25));
 		assertThrows(IllegalArgumentException.class, () -> new Point(25, 5));
+		assertThrows(IllegalArgumentException.class, () -> Point.createWithPair("(5,5)-(25,10)"));
 	}
 
 	@Test
