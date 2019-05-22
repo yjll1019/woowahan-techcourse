@@ -94,12 +94,4 @@ public class Point implements Comparable<Point> {
 	public String toString() {
 		return String.format("Point { x: %d, y: %d }", x, y);
 	}
-
-	@Override
-	public int compareTo(Point point) {
-		if (this.y == point.y) {
-			return Integer.compare(this.x, point.x);
-		}
-		return Integer.compare(this.y, point.y);
-	}
 }

@@ -11,7 +11,6 @@ public class OutputView {
 
 	public static void printCoordinate(List<Point> points) {
 		StringBuilder sb = new StringBuilder();
-		Collections.sort(points);
 
 		for (int i = 24; i > 0; --i) {
 			final int currentY = i;
