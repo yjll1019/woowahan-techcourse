@@ -1,8 +1,8 @@
 package com.woowacourse.coordinate.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Square extends Figure {
 	public static final int NUM_OF_POINTS = 4;
@@ -11,36 +11,49 @@ public class Square extends Figure {
 
 	public Square(List<Point> points) {
 		super(points, NUM_OF_POINTS);
-		if (!isParallelWithAxis(points)) {
-			throw new IllegalArgumentException("Invalid set of points");
-		}
+		checkIfSquare(points);
 		this.points = points;
 	}
 
-	private boolean isParallelWithAxis(List<Point> points) {
-		return points.stream()
-				.allMatch(p -> filterMatchXPoints(points, p).size() == 2 && filterMatchYPoints(points, p).size() == 2);
+	private void checkIfSquare(List<Point> points) {
+		Point maxDistancePoint = getLongestPoint(points);
+
+		for(Point p : points) {
+			checkAngle(points, maxDistancePoint, p);
+		}
 	}
 
-	private List<Point> filterMatchXPoints(List<Point> points, Point x) {
-		return points.stream()
-				.filter(p -> p.matchX(x))
-				.collect(Collectors.toList());
+	private void checkAngle(List<Point> points, Point maxDistancePoint, Point p) {
+		if (p.equals(points.get(0)) || p.equals(maxDistancePoint)) {
+			return;
+		}
+		double angle = p.calculateAngle(points.get(0), maxDistancePoint);
+		if (angle != 90) {
+			throw new IllegalArgumentException("Not a square!");
+		}
 	}
 
-	private List<Point> filterMatchYPoints(List<Point> points, Point y) {
-		return points.stream()
-				.filter(p -> p.matchY(y))
-				.collect(Collectors.toList());
+	private Point getLongestPoint(List<Point> points) {
+		Point maxDistancePoint = points.get(1);
+		for (int i = 2; i < points.size(); i++) {
+			maxDistancePoint = getLongerPoint(points, maxDistancePoint, points.get(i));
+		}
+		return maxDistancePoint;
+	}
+
+	private Point getLongerPoint(List<Point> points, Point p1, Point p2) {
+		if (points.get(0).calculateDistance(p2) > points.get(0).calculateDistance(p1)) {
+			return p2;
+		}
+		return p1;
 	}
 
 	@Override
 	public double calculateArea() {
-		List<Point> filteredPoints = filterMatchXPoints(points, points.get(0));
-		int d1 = (int) filteredPoints.get(0).calculateDistance(filteredPoints.get(1));
-		filteredPoints = filterMatchYPoints(points, points.get(0));
-		int d2 = (int) filteredPoints.get(0).calculateDistance(filteredPoints.get(1));
-		return (double) d1 * d2;
+		Point maxDistancePoint = getLongestPoint(points);
+		List<Point> nearPoints = new ArrayList<>(points);
+		nearPoints.remove(maxDistancePoint);
+		return nearPoints.get(0).calculateDistance(nearPoints.get(1)) * nearPoints.get(0).calculateDistance(nearPoints.get(2));
 	}
 
 	@Override

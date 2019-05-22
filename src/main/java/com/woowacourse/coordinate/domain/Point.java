@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Point implements Comparable<Point> {
+public class Point {
 	private static final int MIN = 0;
 	private static final int MAX = 24;
 
@@ -38,7 +38,6 @@ public class Point implements Comparable<Point> {
 				.collect(Collectors.toList());
 	}
 
-
 	private boolean isSurroundedWithParenthesis(String s) {
 		return s.startsWith("(") && s.endsWith(")");
 	}
@@ -69,7 +68,12 @@ public class Point implements Comparable<Point> {
 		if (p.x == this.x) {
 			return Optional.ofNullable(null);
 		}
-		return Optional.of(Math.abs((p.y - this.y) / (double)(p.x - this.x)));
+		return Optional.of(Math.abs((p.y - this.y) / (double) (p.x - this.x)));
+	}
+
+	public double calculateAngle(Point p1, Point p2) {
+		double cangleRad = Math.atan((double)(p2.y - this.y) / (p2.x - this.x)) - Math.atan((double)(p1.y - this.y) / (p1.x - this.x));
+		return Math.abs(Math.toDegrees(cangleRad));
 	}
 
 	@Override

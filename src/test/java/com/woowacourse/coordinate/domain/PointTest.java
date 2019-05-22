@@ -47,12 +47,17 @@ public class PointTest {
 		assertThat(new Point(1, 1).calculateDistance(new Point(2, 2))).isEqualTo(1.414, offset(0.01));
 	}
 
-
 	@Test
 	void calculateSlope() {
 		assertThat(new Point(1,1).calculateSlope(new Point(3,3)).get()).isEqualTo(1);
 		assertThat(new Point(1,1).calculateSlope(new Point(5,2)).get()).isEqualTo(0.25, offset(0.01));
 		assertThat(new Point(1,1).calculateSlope(new Point(5,1)).get()).isEqualTo(0);
 		assertThat(new Point(1,1).calculateSlope(new Point(1,6)).isPresent()).isFalse();
+	}
+
+	@Test
+	void calculateAngle() {
+		assertThat(new Point(6,3).calculateAngle(new Point(9,6), new Point(3,6))).isEqualTo(90);
+		assertThat(new Point(1,1).calculateAngle(new Point(1,5), new Point(7,1))).isEqualTo(90);
 	}
 }
