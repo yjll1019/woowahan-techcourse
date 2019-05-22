@@ -2,7 +2,6 @@ package com.woowacourse.coordinate;
 
 import java.util.Arrays;
 import java.util.List;
-
 import com.woowacourse.coordinate.domain.*;
 import com.woowacourse.coordinate.view.InputView;
 import com.woowacourse.coordinate.view.OutputView;
@@ -43,13 +42,7 @@ public class AppMain {
 	}
 
 	private static List<Point> handlePoints(List<Point> points) {
-		if (tryHandleSquare(points)) {
-			return points;
-		}
-		if (tryHandleTriangle(points)) {
-			return points;
-		}
-		if (tryHandleLine(points)) {
+		if (tryHandleSquare(points) || tryHandleTriangle(points) || tryHandleLine(points)) {
 			return points;
 		}
 		if (points.size() == 1) {
