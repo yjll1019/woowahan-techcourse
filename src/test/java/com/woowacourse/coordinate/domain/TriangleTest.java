@@ -1,9 +1,6 @@
-package com.woowacourse.coordinate;
+package com.woowacourse.coordinate.domain;
 
 import java.util.Arrays;
-
-import com.woowacourse.coordinate.domain.Point;
-import com.woowacourse.coordinate.domain.Triangle;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
