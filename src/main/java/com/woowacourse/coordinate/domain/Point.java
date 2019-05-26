@@ -1,10 +1,7 @@
 package com.woowacourse.coordinate.domain;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Point {
 	private static final int MIN = 0;
@@ -19,32 +16,10 @@ public class Point {
 		this.y = y;
 	}
 
-	public Point(String str) {
-		str = str.trim();
-		if (!isSurroundedWithParenthesis(str)) {
-			throw new IllegalArgumentException("유효하지 않은 좌표 입력입니다.");
-		}
-
-		String[] segments = str.split("[,()]");
-		x = Integer.valueOf(segments[1].trim());
-		y = Integer.valueOf(segments[2].trim());
-		checkRange(x, y);
-	}
-
 	private void checkRange(int x, int y) {
 		if (x <= MIN || x > MAX || y <= MIN || y > MAX) {
 			throw new IllegalArgumentException(String.format("범위를 벗어난 좌표입니다 { x: %d, y: %d }", x, y));
 		}
-	}
-
-	public static List<Point> createWithPair(String s) {
-		return Arrays.stream(s.split("-"))
-				.map(Point::new)
-				.collect(Collectors.toList());
-	}
-
-	private boolean isSurroundedWithParenthesis(String s) {
-		return s.startsWith("(") && s.endsWith(")");
 	}
 
 	public boolean matchX(int x) {

@@ -1,6 +1,10 @@
 package com.woowacourse.coordinate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.woowacourse.coordinate.domain.*;
+import com.woowacourse.coordinate.utils.StringSeparator;
 import com.woowacourse.coordinate.view.InputView;
 import com.woowacourse.coordinate.view.OutputView;
 
@@ -23,7 +27,15 @@ public class AppMain {
 	}
 
 	public static Points createPoints() {
-		return new Points(Point.createWithPair(InputView.inputCoordinate()));
+		List<String> coordinates = StringSeparator.separateString(InputView.inputCoordinate());
+		List<Point> points = new ArrayList<>();
+
+		for(String s : coordinates) {
+			List<Integer> coordinate = StringSeparator.separateCoordinate(s);
+			points.add(new Point(coordinate.get(0), coordinate.get(1)));
+		}
+
+		return new Points(points);
 	}
 
 	public static void printFigure(Figure figure) {
@@ -36,7 +48,7 @@ public class AppMain {
 	public static Figure createFigure(Points points) {
 		FigureCreator figureCreator = new FigureFactory();
 
-		if (points.getPointsSize() != 1) {
+		if (points.getPoints().size() != 1) {
 			return figureCreator.create(points);
 		}
 		return null;
