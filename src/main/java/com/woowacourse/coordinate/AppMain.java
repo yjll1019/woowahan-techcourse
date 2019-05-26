@@ -32,7 +32,7 @@ public class AppMain {
 		List<String> coordinates = StringSeparator.separateString(InputView.inputCoordinate());
 		List<Point> points = new ArrayList<>();
 
-		for(String s : coordinates) {
+		for (String s : coordinates) {
 			List<Integer> coordinate = StringSeparator.separateCoordinate(s);
 			points.add(new Point(new XCoordinate(coordinate.get(0)), new YCoordinate(coordinate.get(1))));
 		}

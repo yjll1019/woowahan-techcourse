@@ -16,7 +16,7 @@ class StringSeparatorTest {
 
 	@Test
 	void separateCoordinate() {
-		assertThat(StringSeparator.separateCoordinate("(1,2)")).isEqualTo(Arrays.asList(1,2));
+		assertThat(StringSeparator.separateCoordinate("(1,2)")).isEqualTo(Arrays.asList(1, 2));
 	}
 
 	@Test

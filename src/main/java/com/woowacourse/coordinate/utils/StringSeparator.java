@@ -26,7 +26,7 @@ public class StringSeparator {
 			coordinate = Arrays.asList(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
 		}
 
-		if(coordinate.size() == 0) {
+		if (coordinate.size() == 0) {
 			throw new IllegalArgumentException("유효하지 않은 좌표 입력입니다.");
 		}
 

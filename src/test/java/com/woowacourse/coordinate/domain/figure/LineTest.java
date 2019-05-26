@@ -7,7 +7,6 @@ import com.woowacourse.coordinate.domain.coordinate.YCoordinate;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LineTest {

@@ -9,7 +9,6 @@ import com.woowacourse.coordinate.domain.figure.Points;
 import com.woowacourse.coordinate.domain.figure.Shape;
 
 public class OutputView {
-
 	public static void printCoordinate(Points points) {
 		List<Point> point = points.getPoints();
 		StringBuilder sb = new StringBuilder();
@@ -78,6 +77,6 @@ public class OutputView {
 			printDistance(s.calculateArea());
 			return;
 		}
-		System.out.println(String.format("%s 넓이는 %.1f", s, s.calculateArea()));
+		System.out.println(s);
 	}
 }

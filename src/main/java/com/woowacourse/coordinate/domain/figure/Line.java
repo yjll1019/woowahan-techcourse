@@ -16,7 +16,7 @@ public class Line extends Figure {
 	public double calculateArea() {
 		return points.getPoints().get(FIRST_POINT_OF_LINE).calculateDistance(points.getPoints().get(SECOND_POINT_OF_LINE));
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

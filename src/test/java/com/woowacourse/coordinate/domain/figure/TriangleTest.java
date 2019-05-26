@@ -31,7 +31,7 @@ public class TriangleTest {
 	@Test
 	void calculateArea() {
 		assertThat(new Triangle(new Points(Arrays.asList(new Point(new XCoordinate(10), new YCoordinate(10)), new Point(new XCoordinate(14), new YCoordinate(15)),
-				new Point(new XCoordinate(20),new YCoordinate(8))))).calculateArea()).isEqualTo(29.0, offset(0.01));
+				new Point(new XCoordinate(20), new YCoordinate(8))))).calculateArea()).isEqualTo(29.0, offset(0.01));
 		assertThat(new Triangle(new Points(Arrays.asList(new Point(new XCoordinate(15), new YCoordinate(20)), new Point(new XCoordinate(15), new YCoordinate(10)),
 				new Point(new XCoordinate(7), new YCoordinate(10))))).calculateArea()).isEqualTo(40.0, offset(0.01));
 	}
