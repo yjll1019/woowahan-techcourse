@@ -56,18 +56,13 @@ public class Point {
 		if (!(o instanceof Point)) {
 			return false;
 		}
-		Point point = (Point) o;
-		return x == point.x &&
-				y == point.y;
+		final Point point = (Point) o;
+		return Objects.equals(x, point.x) &&
+				Objects.equals(y, point.y);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Point { x: %d, y: %d }", x, y);
 	}
 }

@@ -13,5 +13,4 @@ public class Points {
 	public List<Point> getPoints() {
 		return Collections.unmodifiableList(points);
 	}
-
 }
