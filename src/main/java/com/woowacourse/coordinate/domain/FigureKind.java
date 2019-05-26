@@ -25,12 +25,11 @@ public enum FigureKind {
 
 	public static FigureKind valueOf(int numOfPoints) {
 		List<FigureKind> filtered = Arrays.stream(values())
-				.filter(k -> k.numOfPoints == numOfPoints)
+				.filter(figureKind -> figureKind.numOfPoints == numOfPoints)
 				.collect(Collectors.toList());
 
-		if (filtered.isEmpty()) {
-			throw new IllegalArgumentException("일치하는 Figure 종류가 없습니다.");
-		}
+		filtered.stream().findAny().orElseThrow(() -> new IllegalArgumentException("일치하는 Figure 종류가 없습니다."));
+
 		return filtered.get(0);
 	}
 }
