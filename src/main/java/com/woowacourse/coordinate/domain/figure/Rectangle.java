@@ -7,6 +7,9 @@ import java.util.Objects;
 public class Rectangle extends Figure {
 	public static final int NUM_OF_POINTS = 4;
 	private static final int ANGLE_OF_RECTANGLE = 90;
+	private static final int FIRST_POINT_OF_RECTANGLE = 0;
+	private static final int SECOND_POINT_OF_RECTANGLE = 1;
+	private static final int THIRD_POINT_OF_RECTANGLE = 2;
 
 	public Rectangle(Points points) {
 		super(points, NUM_OF_POINTS);
@@ -23,17 +26,17 @@ public class Rectangle extends Figure {
 	}
 
 	private void checkAngle(List<Point> points, Point maxDistancePoint, Point p) {
-		if (p.equals(points.get(0)) || p.equals(maxDistancePoint)) {
+		if (p.equals(points.get(FIRST_POINT_OF_RECTANGLE)) || p.equals(maxDistancePoint)) {
 			return;
 		}
-		double angle = p.calculateAngle(points.get(0), maxDistancePoint);
+		double angle = p.calculateAngle(points.get(FIRST_POINT_OF_RECTANGLE), maxDistancePoint);
 		if (angle != ANGLE_OF_RECTANGLE) {
 			throw new IllegalArgumentException("사각형이 아닙니다.");
 		}
 	}
 
 	private Point getLongestPoint(List<Point> points) {
-		Point maxDistancePoint = points.get(1);
+		Point maxDistancePoint = points.get(SECOND_POINT_OF_RECTANGLE);
 		for (int i = 2; i < points.size(); i++) {
 			maxDistancePoint = getLongerPoint(points, maxDistancePoint, points.get(i));
 		}
@@ -41,7 +44,7 @@ public class Rectangle extends Figure {
 	}
 
 	private Point getLongerPoint(List<Point> points, Point p1, Point p2) {
-		if (points.get(0).calculateDistance(p2) > points.get(0).calculateDistance(p1)) {
+		if (points.get(FIRST_POINT_OF_RECTANGLE).calculateDistance(p2) > points.get(FIRST_POINT_OF_RECTANGLE).calculateDistance(p1)) {
 			return p2;
 		}
 		return p1;
@@ -52,7 +55,8 @@ public class Rectangle extends Figure {
 		Point maxDistancePoint = getLongestPoint(points.getPoints());
 		List<Point> nearPoints = new ArrayList<>(points.getPoints());
 		nearPoints.remove(maxDistancePoint);
-		return nearPoints.get(0).calculateDistance(nearPoints.get(1)) * nearPoints.get(0).calculateDistance(nearPoints.get(2));
+		return nearPoints.get(FIRST_POINT_OF_RECTANGLE).calculateDistance(nearPoints.get(SECOND_POINT_OF_RECTANGLE))
+				* nearPoints.get(FIRST_POINT_OF_RECTANGLE).calculateDistance(nearPoints.get(THIRD_POINT_OF_RECTANGLE));
 	}
 
 	@Override

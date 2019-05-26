@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class Line extends Figure {
 	public static final int NUM_OF_POINTS = 2;
+	private static final int FIRST_POINT_OF_LINE = 0;
+	private static final int SECOND_POINT_OF_LINE = 1;
 
 	public Line(Points points) {
 		super(points, NUM_OF_POINTS);
@@ -12,7 +14,7 @@ public class Line extends Figure {
 
 	@Override
 	public double calculateArea() {
-		return points.getPoints().get(0).calculateDistance(points.getPoints().get(1));
+		return points.getPoints().get(FIRST_POINT_OF_LINE).calculateDistance(points.getPoints().get(SECOND_POINT_OF_LINE));
 	}
 	
 	@Override
