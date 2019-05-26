@@ -29,22 +29,17 @@ public class Point {
 	}
 
 	public double calculateSlope(Point p) {
-		if (this.equals(p)) {
+		if (this.x == p.x) {
 			throw new IllegalArgumentException("삼각형을 만들 수 없는 좌표입니다.");
 		}
-
-		if(this.x == p.x) {
-			return Math.abs((p.y.getCoordinate() - this.y.getCoordinate()) / 1.0);
-		}
-
 		return Math.abs((p.y.getCoordinate() - this.y.getCoordinate()) / (double) (p.x.getCoordinate() - this.x.getCoordinate()));
 	}
 
 	public double calculateAngle(Point p1, Point p2) {
-		double cAnglerad = Math.atan((double) (p2.y.getCoordinate() - this.y.getCoordinate())
+		double angle = Math.atan((double) (p2.y.getCoordinate() - this.y.getCoordinate())
 				/ (p2.x.getCoordinate() - this.x.getCoordinate()))
 				- Math.atan((double) (p1.y.getCoordinate() - this.y.getCoordinate()) / (p1.x.getCoordinate() - this.x.getCoordinate()));
-		return Math.abs(Math.toDegrees(cAnglerad));
+		return Math.abs(Math.toDegrees(angle));
 	}
 
 	@Override

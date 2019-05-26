@@ -2,13 +2,13 @@ package com.woowacourse.coordinate.domain.figure;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class Triangle extends Figure {
 	public static final int NUM_OF_POINTS = 3;
 	private static final int FIRST_POINT_OF_TRIANGLE = 0;
 	private static final int SECOND_POINT_OF_TRIANGLE = 1;
 	private static final int THIRD_POINT_OF_TRIANGLE = 2;
+	private static final int SLOPE_IS_ZERO = 0;
 
 	public Triangle(Points points) {
 		super(points, NUM_OF_POINTS);
@@ -17,13 +17,22 @@ public class Triangle extends Figure {
 	}
 
 	private void checkIfValidTriangle(List<Point> points) {
-		double maybeSlope1 = points.get(FIRST_POINT_OF_TRIANGLE).calculateSlope(points.get(SECOND_POINT_OF_TRIANGLE));
-		double maybeSlope2 = points.get(FIRST_POINT_OF_TRIANGLE).calculateSlope(points.get(THIRD_POINT_OF_TRIANGLE));
+		double maybeSlope1 = getSlope(points, SECOND_POINT_OF_TRIANGLE);
+		double maybeSlope2 = getSlope(points, THIRD_POINT_OF_TRIANGLE);
 
 		if (maybeSlope1 == maybeSlope2) {
 			throw new IllegalArgumentException("삼각형을 만들 수 없는 좌표입니다.");
 		}
 	}
+
+	private double getSlope(List<Point> points, int secondPointOfTriangle) {
+		try {
+			return points.get(FIRST_POINT_OF_TRIANGLE).calculateSlope(points.get(secondPointOfTriangle));
+		} catch (Exception e) {
+			return SLOPE_IS_ZERO;
+		}
+	}
+
 
 	@Override
 	public double calculateArea() {
