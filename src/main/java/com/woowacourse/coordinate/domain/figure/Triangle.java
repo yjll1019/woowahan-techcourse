@@ -62,6 +62,6 @@ public class Triangle extends Figure {
 
 	@Override
 	public String toString() {
-		return "삼각형";
+		return String.format("삼각형의 넓이는 %.1f", calculateArea());
 	}
 }

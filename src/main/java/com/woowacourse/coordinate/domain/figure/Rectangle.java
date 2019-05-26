@@ -78,7 +78,6 @@ public class Rectangle extends Figure {
 
 	@Override
 	public String toString() {
-		return "사각형";
+		return String.format("사각형의 넓이는 %.1f", calculateArea());
 	}
-
 }
