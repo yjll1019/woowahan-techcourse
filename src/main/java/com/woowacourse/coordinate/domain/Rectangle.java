@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Square extends Figure {
+public class Rectangle extends Figure {
 	public static final int NUM_OF_POINTS = 4;
+	private static final int ANGLE_OF_RECTANGLE = 90;
 
-	public Square(Points points) {
+	public Rectangle(Points points) {
 		super(points, NUM_OF_POINTS);
 		checkIfSquare(points.getPoints());
 		this.points = points;
@@ -26,7 +27,7 @@ public class Square extends Figure {
 			return;
 		}
 		double angle = p.calculateAngle(points.get(0), maxDistancePoint);
-		if (angle != 90) {
+		if (angle != ANGLE_OF_RECTANGLE) {
 			throw new IllegalArgumentException("사각형이 아닙니다.");
 		}
 	}
@@ -59,11 +60,11 @@ public class Square extends Figure {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof Square)) {
+		if (!(o instanceof Rectangle)) {
 			return false;
 		}
-		Square square = (Square) o;
-		return Objects.equals(points, square.points);
+		Rectangle rectangle = (Rectangle) o;
+		return Objects.equals(points, rectangle.points);
 	}
 
 	@Override

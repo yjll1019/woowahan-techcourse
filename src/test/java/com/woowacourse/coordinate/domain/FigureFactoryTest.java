@@ -1,9 +1,7 @@
 package com.woowacourse.coordinate.domain;
 
 import java.util.Arrays;
-import java.util.List;
 
-import com.woowacourse.fuel.Sonata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +30,7 @@ class FigureFactoryTest {
 	@Test
 	void createSquare() {
 		Points points = new Points(Arrays.asList(new Point(10, 10), new Point(22, 10), new Point(22, 18), new Point(10, 18)));
-		assertThat(creator.create(points)).isEqualTo(new Square(points));
+		assertThat(creator.create(points)).isEqualTo(new Rectangle(points));
 	}
 
 }

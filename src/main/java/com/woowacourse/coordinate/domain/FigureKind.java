@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public enum FigureKind {
 	LINE(Line.NUM_OF_POINTS, Line::new),
 	TRIANGLE(Triangle.NUM_OF_POINTS, Triangle::new),
-	SQUARE(Square.NUM_OF_POINTS, Square::new);
+	SQUARE(Rectangle.NUM_OF_POINTS, Rectangle::new);
 
 	private int numOfPoints;
 	private Function<Points, Figure> mapper;
