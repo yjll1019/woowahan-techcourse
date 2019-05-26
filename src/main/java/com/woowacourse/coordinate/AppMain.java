@@ -7,38 +7,40 @@ import com.woowacourse.coordinate.view.InputView;
 import com.woowacourse.coordinate.view.OutputView;
 
 public class AppMain {
-	private static List<Point> points;
-
 	public static void main(String[] args) {
-		boolean handledResult = tryHandlePoints();
-
-		while (!handledResult) {
-			handledResult = tryHandlePoints();
-		}
+		calculateCoordinates();
 	}
 
-	public static boolean tryHandlePoints() {
+	public static void calculateCoordinates() {
 		try {
-			printPoints();
-			return true;
+			List<Point> points = createPoints();
+			Figure figure = createFigure(points);
+
+			OutputView.printCoordinate(points);
+			printFigure(figure);
 		} catch (Exception e) {
-			OutputView.printError(e.getMessage());
+			System.out.println(e.getMessage());
+			calculateCoordinates();
 		}
-		return false;
 	}
 
-	private static boolean printPoints() {
-		points = Point.createWithPair(InputView.inputCoordinate());
+	public static List<Point> createPoints() {
+		return Point.createWithPair(InputView.inputCoordinate());
+	}
+
+	public static void printFigure(Figure figure) {
+		if (figure == null) {
+			return;
+		}
+		OutputView.printShape(figure);
+	}
+
+	public static Figure createFigure(List<Point> points) {
 		FigureCreator figureCreator = new FigureFactory();
 
 		if (points.size() != 1) {
-			Figure figure = figureCreator.create(points);
-			OutputView.printCoordinate(points);
-			OutputView.printShape(figure);
-			return true;
+			return figureCreator.create(points);
 		}
-
-		OutputView.printCoordinate(points);
-		return true;
+		return null;
 	}
 }
