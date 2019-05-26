@@ -11,14 +11,14 @@ public enum FigureKind {
 	SQUARE(Square.NUM_OF_POINTS, Square::new);
 
 	private int numOfPoints;
-	private Function<List<Point>, Figure> mapper;
+	private Function<Points, Figure> mapper;
 
-	FigureKind(int numOfPoints, Function<List<Point>, Figure> shapeMapper) {
+	FigureKind(int numOfPoints, Function<Points, Figure> shapeMapper) {
 		this.numOfPoints = numOfPoints;
 		this.mapper = shapeMapper;
 	}
 
-	public Figure mapToShape(List<Point> points) {
+	public Figure mapToShape(Points points) {
 		return mapper.apply(points);
 	}
 

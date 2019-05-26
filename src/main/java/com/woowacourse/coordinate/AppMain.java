@@ -1,7 +1,5 @@
 package com.woowacourse.coordinate;
 
-import java.util.List;
-
 import com.woowacourse.coordinate.domain.*;
 import com.woowacourse.coordinate.view.InputView;
 import com.woowacourse.coordinate.view.OutputView;
@@ -13,7 +11,7 @@ public class AppMain {
 
 	public static void calculateCoordinates() {
 		try {
-			List<Point> points = createPoints();
+			Points points = createPoints();
 			Figure figure = createFigure(points);
 
 			OutputView.printCoordinate(points);
@@ -24,8 +22,8 @@ public class AppMain {
 		}
 	}
 
-	public static List<Point> createPoints() {
-		return Point.createWithPair(InputView.inputCoordinate());
+	public static Points createPoints() {
+		return new Points(Point.createWithPair(InputView.inputCoordinate()));
 	}
 
 	public static void printFigure(Figure figure) {
@@ -35,10 +33,10 @@ public class AppMain {
 		OutputView.printShape(figure);
 	}
 
-	public static Figure createFigure(List<Point> points) {
+	public static Figure createFigure(Points points) {
 		FigureCreator figureCreator = new FigureFactory();
 
-		if (points.size() != 1) {
+		if (points.getPointsSize() != 1) {
 			return figureCreator.create(points);
 		}
 		return null;

@@ -1,12 +1,11 @@
 package com.woowacourse.coordinate.domain;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Line extends Figure {
 	public static final int NUM_OF_POINTS = 2;
 
-	public Line(List<Point> points) {
+	public Line(Points points) {
 		super(points, NUM_OF_POINTS);
 		this.points = points;
 	}
@@ -30,6 +29,6 @@ public class Line extends Figure {
 
 	@Override
 	public double calculateArea() {
-		return points.get(0).calculateDistance(points.get(1));
+		return points.getPoints().get(0).calculateDistance(points.getPoints().get(1));
 	}
 }

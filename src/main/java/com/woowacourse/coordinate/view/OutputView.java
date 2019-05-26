@@ -5,17 +5,19 @@ import java.util.stream.Collectors;
 
 import com.woowacourse.coordinate.domain.Line;
 import com.woowacourse.coordinate.domain.Point;
+import com.woowacourse.coordinate.domain.Points;
 import com.woowacourse.coordinate.domain.Shape;
 
 public class OutputView {
 
-	public static void printCoordinate(List<Point> points) {
+	public static void printCoordinate(Points points) {
+		List<Point> point = points.getPoints();
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 24; i > 0; --i) {
 			final int currentY = i;
 			sb.append(getYAxisString(currentY));
-			List<Point> pointsToPrint = points.stream()
+			List<Point> pointsToPrint = point.stream()
 					.filter(p -> p.matchY(currentY))
 					.collect(Collectors.toList());
 			printPoint(sb, pointsToPrint);
@@ -72,14 +74,10 @@ public class OutputView {
 	}
 
 	public static void printShape(Shape s) {
-		if(s instanceof Line) {
+		if (s instanceof Line) {
 			printDistance(s.calculateArea());
 			return;
 		}
 		System.out.println(String.format("%s 넓이는 %.1f", s, s.calculateArea()));
-	}
-
-	public static void printError(String msg) {
-		System.out.println(msg);
 	}
 }

@@ -7,9 +7,9 @@ import java.util.Optional;
 public class Triangle extends Figure {
 	public static final int NUM_OF_POINTS = 3;
 
-	public Triangle(List<Point> points) {
+	public Triangle(Points points) {
 		super(points, NUM_OF_POINTS);
-		checkIfValidTriangle(points);
+		checkIfValidTriangle(points.getPoints());
 		this.points = points;
 	}
 
@@ -37,9 +37,9 @@ public class Triangle extends Figure {
 
 	@Override
 	public double calculateArea() {
-		double lengthA = points.get(0).calculateDistance(points.get(1));
-		double lengthB = points.get(1).calculateDistance(points.get(2));
-		double lengthC = points.get(2).calculateDistance(points.get(0));
+		double lengthA = points.getPoints().get(0).calculateDistance(points.getPoints().get(1));
+		double lengthB = points.getPoints().get(1).calculateDistance(points.getPoints().get(2));
+		double lengthC = points.getPoints().get(2).calculateDistance(points.getPoints().get(0));
 		double s = (lengthA + lengthB + lengthC) / 2;
 		return Math.sqrt(s * (s - lengthA) * (s - lengthB) * (s - lengthC));
 	}

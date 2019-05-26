@@ -69,7 +69,7 @@ public class Point {
 	}
 
 	public double calculateAngle(Point p1, Point p2) {
-		double cangleRad = Math.atan((double)(p2.y - this.y) / (p2.x - this.x)) - Math.atan((double)(p1.y - this.y) / (p1.x - this.x));
+		double cangleRad = Math.atan((double) (p2.y - this.y) / (p2.x - this.x)) - Math.atan((double) (p1.y - this.y) / (p1.x - this.x));
 		return Math.abs(Math.toDegrees(cangleRad));
 	}
 

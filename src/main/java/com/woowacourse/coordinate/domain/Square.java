@@ -7,16 +7,16 @@ import java.util.Objects;
 public class Square extends Figure {
 	public static final int NUM_OF_POINTS = 4;
 
-	public Square(List<Point> points) {
+	public Square(Points points) {
 		super(points, NUM_OF_POINTS);
-		checkIfSquare(points);
+		checkIfSquare(points.getPoints());
 		this.points = points;
 	}
 
 	private void checkIfSquare(List<Point> points) {
 		Point maxDistancePoint = getLongestPoint(points);
 
-		for(Point p : points) {
+		for (Point p : points) {
 			checkAngle(points, maxDistancePoint, p);
 		}
 	}
@@ -48,8 +48,8 @@ public class Square extends Figure {
 
 	@Override
 	public double calculateArea() {
-		Point maxDistancePoint = getLongestPoint(points);
-		List<Point> nearPoints = new ArrayList<>(points);
+		Point maxDistancePoint = getLongestPoint(points.getPoints());
+		List<Point> nearPoints = new ArrayList<>(points.getPoints());
 		nearPoints.remove(maxDistancePoint);
 		return nearPoints.get(0).calculateDistance(nearPoints.get(1)) * nearPoints.get(0).calculateDistance(nearPoints.get(2));
 	}
