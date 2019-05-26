@@ -2,6 +2,7 @@ package com.woowacourse.coordinate.domain;
 
 import java.util.Arrays;
 
+import com.woowacourse.coordinate.domain.figure.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

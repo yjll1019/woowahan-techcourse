@@ -3,7 +3,9 @@ package com.woowacourse.coordinate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.woowacourse.coordinate.domain.*;
+import com.woowacourse.coordinate.domain.coordinate.XCoordinate;
+import com.woowacourse.coordinate.domain.coordinate.YCoordinate;
+import com.woowacourse.coordinate.domain.figure.*;
 import com.woowacourse.coordinate.utils.StringSeparator;
 import com.woowacourse.coordinate.view.InputView;
 import com.woowacourse.coordinate.view.OutputView;
@@ -32,7 +34,7 @@ public class AppMain {
 
 		for(String s : coordinates) {
 			List<Integer> coordinate = StringSeparator.separateCoordinate(s);
-			points.add(new Point(coordinate.get(0), coordinate.get(1)));
+			points.add(new Point(new XCoordinate(coordinate.get(0)), new YCoordinate(coordinate.get(1))));
 		}
 
 		return new Points(points);

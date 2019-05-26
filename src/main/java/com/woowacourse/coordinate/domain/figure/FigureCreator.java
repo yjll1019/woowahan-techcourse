@@ -1,4 +1,4 @@
-package com.woowacourse.coordinate.domain;
+package com.woowacourse.coordinate.domain.figure;
 
 public interface FigureCreator {
 	Figure create(Points points);
