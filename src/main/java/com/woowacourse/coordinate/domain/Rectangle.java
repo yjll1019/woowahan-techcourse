@@ -60,6 +60,11 @@ public class Rectangle extends Figure {
 	}
 
 	@Override
+	public String getCalculateMessage() {
+		return String.format("사각형의 넓이는 %.1f", calculateArea());
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;

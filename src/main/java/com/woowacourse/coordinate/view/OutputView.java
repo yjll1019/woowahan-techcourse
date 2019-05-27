@@ -68,15 +68,7 @@ public class OutputView {
 		return "  ";
 	}
 
-	private static void printDistance(double distance) {
-		System.out.println(String.format("두 점 사이의 거리는 %f", distance));
-	}
-
 	public static void printShape(Shape s) {
-		if (s instanceof Line) {
-			printDistance(s.calculateArea());
-			return;
-		}
-		System.out.println(s);
+		System.out.println(s.getCalculateMessage());
 	}
 }

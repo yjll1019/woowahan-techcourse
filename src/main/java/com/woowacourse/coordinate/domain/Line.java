@@ -18,6 +18,11 @@ public class Line extends Figure {
 	}
 
 	@Override
+	public String getCalculateMessage() {
+		return String.format("두 점 사이의 거리는 %f", calculateArea());
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;

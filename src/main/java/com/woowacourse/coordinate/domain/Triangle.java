@@ -44,6 +44,11 @@ public class Triangle extends Figure {
 	}
 
 	@Override
+	public String getCalculateMessage() {
+		return String.format("삼각형의 넓이는 %.1f", calculateArea());
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -58,10 +63,5 @@ public class Triangle extends Figure {
 	@Override
 	public int hashCode() {
 		return Objects.hash(points);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("삼각형의 넓이는 %.1f", calculateArea());
 	}
 }
