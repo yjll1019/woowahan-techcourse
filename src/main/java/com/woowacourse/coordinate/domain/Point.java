@@ -7,9 +7,9 @@ public class Point {
 	private Coordinate x;
 	private Coordinate y;
 
-	public Point(Coordinate x, Coordinate y) {
-		this.x = x;
-		this.y = y;
+	public Point(int x, int y) {
+		this.x = new Coordinate(x);
+		this.y = new Coordinate(y);
 	}
 
 	public boolean matchX(int x) {
