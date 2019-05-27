@@ -1,8 +1,8 @@
-package com.woowacourse.coordinate.domain.coordinate;
+package com.woowacourse.coordinate.domain;
 
 import java.util.Objects;
 
-public abstract class Coordinate {
+public class Coordinate {
 	private static final int COORDINATE_MIN = 0;
 	private static final int COORDINATE_MAX = 24;
 

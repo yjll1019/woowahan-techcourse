@@ -3,10 +3,10 @@ package com.woowacourse.coordinate.view;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.woowacourse.coordinate.domain.figure.Line;
-import com.woowacourse.coordinate.domain.figure.Point;
-import com.woowacourse.coordinate.domain.figure.Points;
-import com.woowacourse.coordinate.domain.figure.Shape;
+import com.woowacourse.coordinate.domain.Line;
+import com.woowacourse.coordinate.domain.Point;
+import com.woowacourse.coordinate.domain.Points;
+import com.woowacourse.coordinate.domain.Shape;
 
 public class OutputView {
 	public static void printCoordinate(Points points) {

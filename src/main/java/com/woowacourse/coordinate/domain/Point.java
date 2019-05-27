@@ -1,15 +1,13 @@
-package com.woowacourse.coordinate.domain.figure;
+package com.woowacourse.coordinate.domain;
 
 import java.util.Objects;
 
-import com.woowacourse.coordinate.domain.coordinate.XCoordinate;
-import com.woowacourse.coordinate.domain.coordinate.YCoordinate;
 
 public class Point {
-	private XCoordinate x;
-	private YCoordinate y;
+	private Coordinate x;
+	private Coordinate y;
 
-	public Point(XCoordinate x, YCoordinate y) {
+	public Point(Coordinate x, Coordinate y) {
 		this.x = x;
 		this.y = y;
 	}

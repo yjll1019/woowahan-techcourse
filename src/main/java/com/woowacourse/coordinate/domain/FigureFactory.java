@@ -1,4 +1,4 @@
-package com.woowacourse.coordinate.domain.figure;
+package com.woowacourse.coordinate.domain;
 
 public class FigureFactory implements FigureCreator {
 	@Override
