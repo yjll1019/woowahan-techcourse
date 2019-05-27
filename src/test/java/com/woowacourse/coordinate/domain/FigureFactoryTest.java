@@ -16,22 +16,22 @@ class FigureFactoryTest {
 
 	@Test
 	void createLine() {
-		Points points = new Points(Arrays.asList(new Point(new Coordinate(1), new Coordinate(10)), new Point(new Coordinate(5), new Coordinate(11))));
+		Points points = new Points(Arrays.asList(new Point((1), (10)), new Point((5), (11))));
 		assertThat(creator.create(points)).isEqualTo(new Line(points));
 	}
 
 	@Test
 	void createTriangle() {
-		Points points = new Points(Arrays.asList(new Point(new Coordinate(10), new Coordinate(10)),
-				new Point(new Coordinate(14), new Coordinate(15)), new Point(new Coordinate(20), new Coordinate(8))));
+		Points points = new Points(Arrays.asList(new Point((10), (10)),
+				new Point((14), (15)), new Point((20), (8))));
 		assertThat(creator.create(points)).isEqualTo(new Triangle(points));
 	}
 
 	@Test
 	void createRectangle() {
-		Points points = new Points(Arrays.asList(new Point(new Coordinate(10), new Coordinate(10)),
-				new Point(new Coordinate(22), new Coordinate(10)), new Point(new Coordinate(22), new Coordinate(18)),
-				new Point(new Coordinate(10), new Coordinate(18))));
+		Points points = new Points(Arrays.asList(new Point((10), (10)),
+				new Point((22), (10)), new Point((22), (18)),
+				new Point((10), (18))));
 		assertThat(creator.create(points)).isEqualTo(new Rectangle(points));
 	}
 

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CoordinateTest {
 	@Test
 	void create() {
-		assertThat(new Coordinate(13)).isEqualTo(new Coordinate(13));
+		assertThat(new Coordinate(13)).isEqualTo((new Coordinate(13)));
 	}
 
 	@Test
