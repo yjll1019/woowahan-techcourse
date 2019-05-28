@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.offset;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PointTest {
 	@Test
@@ -27,6 +28,7 @@ public class PointTest {
 		assertThat(point.calculateSlope(new Point(3, 3))).isEqualTo(1);
 		assertThat(point.calculateSlope(new Point(5, 2))).isEqualTo(0.25, offset(0.01));
 		assertThat(point.calculateSlope(new Point(5, 1))).isEqualTo(0);
+		assertThrows(ArithmeticException.class, () -> point.calculateSlope(new Point(1, 5)));
 	}
 
 	@Test

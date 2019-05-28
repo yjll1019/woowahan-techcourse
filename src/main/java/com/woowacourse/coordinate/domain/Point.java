@@ -27,8 +27,8 @@ public class Point {
 	}
 
 	public double calculateSlope(Point p) {
-		if (this.x == p.x) {
-			throw new IllegalArgumentException("삼각형을 만들 수 없는 좌표입니다.");
+		if (this.x.equals(p.x)) {
+			throw new ArithmeticException("0으로 나눌 수 없습니다.");
 		}
 		return Math.abs((p.y.getCoordinate() - this.y.getCoordinate()) / (double) (p.x.getCoordinate() - this.x.getCoordinate()));
 	}
