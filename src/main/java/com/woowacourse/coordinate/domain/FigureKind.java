@@ -26,6 +26,7 @@ public enum FigureKind {
 		return Arrays.stream(values())
 				.filter(figureKind -> figureKind.numOfPoints == numOfPoints)
 				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException("일치하는 Figure 종류가 없습니다."));
+				.orElseThrow(() -> new IllegalArgumentException("일치하는 Figure 종류가 없습니다."))
+				;
 	}
 }

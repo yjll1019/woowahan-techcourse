@@ -1,6 +1,7 @@
 package com.woowacourse.coordinate.domain;
 
 import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
