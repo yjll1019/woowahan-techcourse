@@ -22,14 +22,10 @@ public enum FigureKind {
 		return mapper.apply(points);
 	}
 
-
 	public static FigureKind valueOf(int numOfPoints) {
-		List<FigureKind> filtered = Arrays.stream(values())
+		return Arrays.stream(values())
 				.filter(figureKind -> figureKind.numOfPoints == numOfPoints)
-				.collect(Collectors.toList());
-
-		filtered.stream().findAny().orElseThrow(() -> new IllegalArgumentException("일치하는 Figure 종류가 없습니다."));
-
-		return filtered.get(0);
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("일치하는 Figure 종류가 없습니다."));
 	}
 }
