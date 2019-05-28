@@ -39,9 +39,6 @@ public class AppMain {
 	}
 
 	public static void printFigure(Figure figure) {
-		if (figure == null) {
-			return;
-		}
 		OutputView.printShape(figure);
 	}
 

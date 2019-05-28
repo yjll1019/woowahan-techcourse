@@ -69,6 +69,9 @@ public class OutputView {
 	}
 
 	public static void printShape(Shape s) {
+		if(s == null) {
+			return ;
+		}
 		System.out.println(s.getCalculateMessage());
 	}
 }
