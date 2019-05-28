@@ -8,7 +8,7 @@ public class Line extends Figure {
 	private static final int SECOND_POINT_OF_LINE = 1;
 
 	public Line(Points points) {
-		super(points, NUM_OF_POINTS);
+		super(points);
 		this.points = points;
 	}
 

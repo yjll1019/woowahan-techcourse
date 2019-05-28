@@ -17,15 +17,6 @@ public class RectangleTest {
 	}
 
 	@Test
-	void invalidSizeOfPoints() {
-		assertThrows(IllegalArgumentException.class, () -> new Rectangle(new Points(Arrays.asList(new Point(1, 1)))));
-		assertThrows(IllegalArgumentException.class, () -> new Rectangle(new Points(Arrays.asList(new Point(1, 11),
-				new Point(5, 10), new Point(10, 14)))));
-		assertThrows(IllegalArgumentException.class, () -> new Rectangle(new Points(Arrays.asList(new Point(1, 1),
-				new Point(5, 10), new Point(10, 14), new Point(20, 20), new Point(21, 24)))));
-	}
-
-	@Test
 	void invalidIsParallel() {
 		assertThrows(IllegalArgumentException.class, () -> new Rectangle(new Points(Arrays.asList(new Point(5, 10),
 				new Point(8, 10), new Point(3, 8), new Point(6, 8)))));

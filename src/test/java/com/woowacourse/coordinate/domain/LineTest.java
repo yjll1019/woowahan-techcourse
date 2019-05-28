@@ -15,17 +15,6 @@ public class LineTest {
 	}
 
 	@Test
-	void invalidSizeOfPoints() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			new Line(new Points(Arrays.asList(new Point(1, 1))));
-		});
-		assertThrows(IllegalArgumentException.class, () -> {
-			new Line(new Points(Arrays.asList(new Point(1, 1),
-					new Point(5, 10), new Point(10, 14))));
-		});
-	}
-
-	@Test
 	void calculateLength() {
 		assertThat(new Line(new Points(Arrays.asList(new Point(3, 3), new Point(6, 3))))
 				.calculateArea()).isEqualTo(3);

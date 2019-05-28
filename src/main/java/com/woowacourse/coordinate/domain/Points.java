@@ -10,6 +10,10 @@ public class Points {
 		this.points = points;
 	}
 
+	public int getSize() {
+		return points.size();
+	}
+
 	public List<Point> getPoints() {
 		return Collections.unmodifiableList(points);
 	}

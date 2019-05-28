@@ -11,7 +11,7 @@ public class Triangle extends Figure {
 	private static final int SLOPE_IS_ZERO = 0;
 
 	public Triangle(Points points) {
-		super(points, NUM_OF_POINTS);
+		super(points);
 		checkIfValidTriangle(points.getPoints());
 		this.points = points;
 	}

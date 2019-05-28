@@ -12,7 +12,7 @@ public class Rectangle extends Figure {
 	private static final int THIRD_POINT_OF_RECTANGLE = 2;
 
 	public Rectangle(Points points) {
-		super(points, NUM_OF_POINTS);
+		super(points);
 		checkIfSquare(points.getPoints());
 		this.points = points;
 	}
