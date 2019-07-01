@@ -3,6 +3,7 @@ package chess.domain.piece;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import chess.domain.*;
 
@@ -79,5 +80,23 @@ public class Pawn extends Piece {
 	@Override
 	public Path getAttackablePath(Position end) {
 		return getValidPath(end, attackMovementInfos);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Pawn)) {
+			return false;
+		}
+		final Pawn pawn = (Pawn) o;
+		return Objects.equals(movementInfos, pawn.movementInfos) &&
+				Objects.equals(attackMovementInfos, pawn.attackMovementInfos);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(movementInfos, attackMovementInfos);
 	}
 }

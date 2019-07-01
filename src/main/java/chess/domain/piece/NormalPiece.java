@@ -1,6 +1,7 @@
 package chess.domain.piece;
 
 import java.util.List;
+import java.util.Objects;
 
 import chess.domain.*;
 
@@ -25,5 +26,22 @@ public class NormalPiece extends Piece {
 	@Override
 	public Path getAttackablePath(Position end) {
 		return getMovablePath(end);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof NormalPiece)) {
+			return false;
+		}
+		final NormalPiece that = (NormalPiece) o;
+		return Objects.equals(movementInfos, that.movementInfos);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(movementInfos);
 	}
 }

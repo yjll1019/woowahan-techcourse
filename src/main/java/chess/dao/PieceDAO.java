@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import chess.database.DatabaseConnection;
 import chess.domain.ChessPiece;
 import chess.domain.Player;
 import chess.domain.Position;
@@ -16,10 +15,10 @@ import chess.domain.piece.Type;
 public class PieceDAO {
 	private static final String INSERT_PIECE =
 			"insert into piece(player, piece_type, x_position, y_position, room_number) values(?,?,?,?,?)";
-	private static final String DELETE_ALL_PIECES_QUERY =
-			"delete from piece where room_number = ?";
 	private static final String SELECT_PIECES_QUERY =
 			"select player, piece_type, x_position, y_position from piece where room_number = ?";
+	private static final String DELETE_ALL_PIECES_QUERY =
+			"delete from piece where room_number = ?";
 
 	public void addAllPieces(int roomNumber, List<Piece> pieces) throws SQLException {
 		for (Piece piece : pieces) {
@@ -27,7 +26,7 @@ public class PieceDAO {
 		}
 	}
 
-	private void addPiece(int roomNumber, Piece piece) throws SQLException {
+	public void addPiece(int roomNumber, Piece piece) throws SQLException {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
 			@Override
 			public void setParam(PreparedStatement pstmt) throws SQLException {
@@ -52,23 +51,26 @@ public class PieceDAO {
 	}
 
 	public List<Piece> getChessPieces(int roomNumber) throws SQLException {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(SELECT_PIECES_QUERY)) {
-			pstmt.setInt(1, roomNumber);
-			return getChessPiece(pstmt);
-		}
-	}
-
-	private List<Piece> getChessPiece(PreparedStatement pstmt) throws SQLException {
-		try (ResultSet rs = pstmt.executeQuery()) {
-			List<Piece> pieces = new ArrayList<>();
-
-			while (rs.next()) {
-				Player player = Player.valueOf(rs.getString(1));
-				Type type = Type.valueOf(rs.getString(2));
-				Position position = Position.getPosition(rs.getInt(3), rs.getInt(4));
-				pieces.add(ChessPiece.generatePiece(player, type, position));
+		SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
+			@Override
+			public void setParam(PreparedStatement pstmt) throws SQLException {
+				pstmt.setInt(1, roomNumber);
 			}
-			return pieces;
-		}
+
+			@Override
+			public Object mapRow(ResultSet rs) throws SQLException {
+				List<Piece> pieces = new ArrayList<>();
+
+				while (rs.next()) {
+					Player player = Player.valueOf(rs.getString(1));
+					Type type = Type.valueOf(rs.getString(2));
+					Position position = Position.getPosition(rs.getInt(3), rs.getInt(4));
+					pieces.add(ChessPiece.generatePiece(player, type, position));
+				}
+				return pieces;
+			}
+		};
+
+		return (List<Piece>) jdbcTemplate.executeQuery(SELECT_PIECES_QUERY);
 	}
 }
