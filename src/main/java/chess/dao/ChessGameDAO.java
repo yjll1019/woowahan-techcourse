@@ -15,6 +15,7 @@ public class ChessGameDAO {
 	private static final String UPDATE_CHESS_GAME_OVER_QUERY = "update chessgame set gameover = ? where room_number = ?";
 	private static final String SELECT_NOT_OVER_CHESS_GAME = "select room_number from chessgame where gameover = 1";
 
+	//TODO : JdbcTemplate 반영
 	public int addChessGame(String currentPlayerName) throws SQLException {
 		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(
 				INSERT_CHESS_GAME_QUERY, Statement.RETURN_GENERATED_KEYS)) {
@@ -33,7 +34,6 @@ public class ChessGameDAO {
 		}
 	}
 
-
 	public Player getChessGameTurn(int roomNumber) throws SQLException {
 		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(SELECT_CHESS_GAME_TURN)) {
 			pstmt.setInt(1, roomNumber);
@@ -51,19 +51,25 @@ public class ChessGameDAO {
 	}
 
 	public void changeTurn(int roomNumber, String currentPlayerName) throws SQLException {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(UPDATE_CHESS_GAME_TURN_QUERY)) {
-			pstmt.setString(1, currentPlayerName);
-			pstmt.setInt(2, roomNumber);
-			pstmt.executeUpdate();
-		}
+		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+			@Override
+			public void setParam(PreparedStatement pstmt) throws SQLException {
+				pstmt.setString(1, currentPlayerName);
+				pstmt.setInt(2, roomNumber);
+			}
+		};
+		jdbcTemplate.insert(UPDATE_CHESS_GAME_TURN_QUERY);
 	}
 
 	public void gameover(int roomNumber) throws SQLException {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(UPDATE_CHESS_GAME_OVER_QUERY)) {
-			pstmt.setBoolean(1, false);
-			pstmt.setInt(2, roomNumber);
-			pstmt.executeUpdate();
-		}
+		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+			@Override
+			public void setParam(PreparedStatement pstmt) throws SQLException {
+				pstmt.setBoolean(1, false);
+				pstmt.setInt(2, roomNumber);
+			}
+		};
+		jdbcTemplate.insert(UPDATE_CHESS_GAME_OVER_QUERY);
 	}
 
 	public List<Integer> getNotOverAllRoomNumbers() throws SQLException {

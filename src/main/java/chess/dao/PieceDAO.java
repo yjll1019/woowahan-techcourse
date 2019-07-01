@@ -28,21 +28,27 @@ public class PieceDAO {
 	}
 
 	private void addPiece(int roomNumber, Piece piece) throws SQLException {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(INSERT_PIECE)) {
-			pstmt.setString(1, piece.getPlayer().name());
-			pstmt.setString(2, piece.getChessType());
-			pstmt.setInt(3, piece.getCoordinateX());
-			pstmt.setInt(4, piece.getCoordinateY());
-			pstmt.setInt(5, roomNumber);
-			pstmt.executeUpdate();
-		}
+		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+			@Override
+			public void setParam(PreparedStatement pstmt) throws SQLException {
+				pstmt.setString(1, piece.getPlayer().name());
+				pstmt.setString(2, piece.getChessType());
+				pstmt.setInt(3, piece.getCoordinateX());
+				pstmt.setInt(4, piece.getCoordinateY());
+				pstmt.setInt(5, roomNumber);
+			}
+		};
+		jdbcTemplate.insert(INSERT_PIECE);
 	}
 
 	public void deleteAllPieces(int roomNumber) throws SQLException {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(DELETE_ALL_PIECES_QUERY)) {
-			pstmt.setInt(1, roomNumber);
-			pstmt.executeUpdate();
-		}
+		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+			@Override
+			public void setParam(PreparedStatement pstmt) throws SQLException {
+				pstmt.setInt(1, roomNumber);
+			}
+		};
+		jdbcTemplate.insert(DELETE_ALL_PIECES_QUERY);
 	}
 
 	public List<Piece> getChessPieces(int roomNumber) throws SQLException {
