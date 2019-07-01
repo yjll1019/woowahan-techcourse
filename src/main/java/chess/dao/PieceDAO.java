@@ -20,24 +20,24 @@ public class PieceDAO {
 	private static final String DELETE_ALL_PIECES_QUERY =
 			"delete from piece where room_number = ?";
 
-	public void addAllPieces(int roomNumber, List<Piece> pieces) throws SQLException {
+	public void addAllPieces(int roomNumber, List<Piece> pieces) {
 		for (Piece piece : pieces) {
 			addPiece(roomNumber, piece);
 		}
 	}
 
-	public void addPiece(int roomNumber, Piece piece) throws SQLException {
+	public void addPiece(int roomNumber, Piece piece) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		jdbcTemplate.executeUpdate(INSERT_PIECE, piece.getPlayer().name(), piece.getChessType(),
 				piece.getCoordinateX(), piece.getCoordinateY(), roomNumber);
 	}
 
-	public void deleteAllPieces(int roomNumber) throws SQLException {
+	public void deleteAllPieces(int roomNumber) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		jdbcTemplate.executeUpdate(DELETE_ALL_PIECES_QUERY, roomNumber);
 	}
 
-	public List<Piece> getChessPieces(int roomNumber) throws SQLException {
+	public List<Piece> getChessPieces(int roomNumber) {
 		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setParams(PreparedStatement pstmt) throws SQLException {

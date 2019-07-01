@@ -6,10 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import chess.dao.exception.DataAccessException;
 import chess.database.DatabaseConnection;
 
 public class JdbcTemplate {
-	private <T> T executeQuery(String sql, RowMapper<T> rm, PreparedStatementSetter pss) throws SQLException {
+	private <T> T executeQuery(String sql, RowMapper<T> rm, PreparedStatementSetter pss) {
 		List<T> result = executeQueryForMultiple(sql, rm, pss);
 		if(result.isEmpty()) {
 			return null;
@@ -17,7 +18,7 @@ public class JdbcTemplate {
 		return result.get(0);
 	}
 
-	public <T> List<T> executeQueryForMultiple(String sql, RowMapper<T> rm, PreparedStatementSetter pss) throws SQLException {
+	public <T> List<T> executeQueryForMultiple(String sql, RowMapper<T> rm, PreparedStatementSetter pss) {
 		try {
 			PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql);
 			ResultSet rs;
@@ -29,23 +30,25 @@ public class JdbcTemplate {
 				result.add(rm.mapRow(rs));
 			}
 			return result;
-		} catch (Exception e) {
-			throw new SQLException();
+		} catch (SQLException e) {
+			throw new DataAccessException(e);
 		}
 	}
 
-	public <T> T executeQuery(String sql, RowMapper<T> rm, Object... params) throws SQLException {
+	public <T> T executeQuery(String sql, RowMapper<T> rm, Object... params) {
 		return executeQuery(sql, rm, createPreparedStatementSetter(params));
 	}
 
-	private void executeUpdate(String sql, PreparedStatementSetter pss) throws SQLException {
+	private void executeUpdate(String sql, PreparedStatementSetter pss) {
 		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
 			pss.setParams(pstmt);
 			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new DataAccessException(e);
 		}
 	}
 
-	public void executeUpdate(String sql, Object... params) throws SQLException {
+	public void executeUpdate(String sql, Object... params) {
 		executeUpdate(sql, createPreparedStatementSetter(params));
 	}
 
