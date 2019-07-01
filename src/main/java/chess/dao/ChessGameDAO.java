@@ -34,12 +34,7 @@ public class ChessGameDAO {
 	}
 
 	public Player getChessGameTurn(int roomNumber) {
-		RowMapper<Player> rm = new RowMapper<Player>() {
-			@Override
-			public Player mapRow(ResultSet rs) throws SQLException {
-				return Player.valueOf(rs.getString(1));
-			}
-		};
+		RowMapper<Player> rm = rs -> Player.valueOf(rs.getString(1));
 
 		JdbcTemplate selectJdbcTemplate = new JdbcTemplate();
 		return selectJdbcTemplate.executeQuery(SELECT_CHESS_GAME_TURN, rm, roomNumber);
@@ -50,18 +45,13 @@ public class ChessGameDAO {
 		jdbcTemplate.executeUpdate(UPDATE_CHESS_GAME_TURN_QUERY, currentPlayerName, roomNumber);
 	}
 
-	public void gameover(int roomNumber) throws SQLException {
+	public void gameover(int roomNumber) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		jdbcTemplate.executeUpdate(UPDATE_CHESS_GAME_OVER_QUERY, false, roomNumber);
 	}
 
 	public List<Integer> getNotOverAllRoomNumbers() {
-		RowMapper<Integer> rm = new RowMapper<Integer>() {
-			@Override
-			public Integer mapRow(ResultSet rs) throws SQLException {
-				return rs.getInt(1);
-			}
-		};
+		RowMapper<Integer> rm = rs -> rs.getInt(1);
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		return jdbcTemplate.executeQueryForMultiple(SELECT_NOT_OVER_CHESS_GAME, rm, null);

@@ -1,9 +1,5 @@
 package chess.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import chess.domain.ChessPiece;
@@ -38,21 +34,13 @@ public class PieceDAO {
 	}
 
 	public List<Piece> getChessPieces(int roomNumber) {
-		PreparedStatementSetter pss = new PreparedStatementSetter() {
-			@Override
-			public void setParams(PreparedStatement pstmt) throws SQLException {
-				pstmt.setInt(1, roomNumber);
-			}
-		};
+		PreparedStatementSetter pss = pstmt -> pstmt.setInt(1, roomNumber);
 
-		RowMapper<Piece> rm = new RowMapper<Piece>() {
-			@Override
-			public Piece mapRow(ResultSet rs) throws SQLException {
-				Player player = Player.valueOf(rs.getString(1));
-				Type type = Type.valueOf(rs.getString(2));
-				Position position = Position.getPosition(rs.getInt(3), rs.getInt(4));
-				return ChessPiece.generatePiece(player, type, position);
-			}
+		RowMapper<Piece> rm = rs -> {
+			Player player = Player.valueOf(rs.getString(1));
+			Type type = Type.valueOf(rs.getString(2));
+			Position position = Position.getPosition(rs.getInt(3), rs.getInt(4));
+			return ChessPiece.generatePiece(player, type, position);
 		};
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
