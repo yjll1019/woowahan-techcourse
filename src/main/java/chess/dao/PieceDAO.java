@@ -27,7 +27,7 @@ public class PieceDAO {
 	}
 
 	public void addPiece(int roomNumber, Piece piece) throws SQLException {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setParam(PreparedStatement pstmt) throws SQLException {
 				pstmt.setString(1, piece.getPlayer().name());
@@ -37,26 +37,33 @@ public class PieceDAO {
 				pstmt.setInt(5, roomNumber);
 			}
 		};
-		jdbcTemplate.insert(INSERT_PIECE);
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.executeUpdate(INSERT_PIECE, pss);
 	}
 
 	public void deleteAllPieces(int roomNumber) throws SQLException {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
+			@Override
+			public void setParam(PreparedStatement pstmt) throws SQLException {
+				pstmt.setInt(1, roomNumber);
+
+			}
+		};
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.executeUpdate(DELETE_ALL_PIECES_QUERY, pss);
+	}
+
+	public List<Piece> getChessPieces(int roomNumber) throws SQLException {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setParam(PreparedStatement pstmt) throws SQLException {
 				pstmt.setInt(1, roomNumber);
 			}
 		};
-		jdbcTemplate.insert(DELETE_ALL_PIECES_QUERY);
-	}
 
-	public List<Piece> getChessPieces(int roomNumber) throws SQLException {
-		SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
-			@Override
-			public void setParam(PreparedStatement pstmt) throws SQLException {
-				pstmt.setInt(1, roomNumber);
-			}
-
+		RowMapper rm = new RowMapper() {
 			@Override
 			public Object mapRow(ResultSet rs) throws SQLException {
 				List<Piece> pieces = new ArrayList<>();
@@ -71,6 +78,7 @@ public class PieceDAO {
 			}
 		};
 
-		return (List<Piece>) jdbcTemplate.executeQuery(SELECT_PIECES_QUERY);
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		return (List<Piece>) jdbcTemplate.executeQuery(SELECT_PIECES_QUERY, pss, rm);
 	}
 }

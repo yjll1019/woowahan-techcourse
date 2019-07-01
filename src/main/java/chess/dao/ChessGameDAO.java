@@ -35,12 +35,14 @@ public class ChessGameDAO {
 	}
 
 	public Player getChessGameTurn(int roomNumber) throws SQLException {
-		SelectJdbcTemplate selectJdbcTemplate = new SelectJdbcTemplate() {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setParam(PreparedStatement pstmt) throws SQLException {
 				pstmt.setInt(1, roomNumber);
 			}
+		};
 
+		RowMapper rm = new RowMapper() {
 			@Override
 			public Object mapRow(ResultSet rs) throws SQLException {
 				if (!rs.next()) {
@@ -50,38 +52,45 @@ public class ChessGameDAO {
 			}
 		};
 
-		return (Player) selectJdbcTemplate.executeQuery(SELECT_CHESS_GAME_TURN);
+		JdbcTemplate selectJdbcTemplate = new JdbcTemplate();
+		return (Player) selectJdbcTemplate.executeQuery(SELECT_CHESS_GAME_TURN, pss, rm);
 	}
 
 	public void changeTurn(int roomNumber, String currentPlayerName) throws SQLException {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setParam(PreparedStatement pstmt) throws SQLException {
 				pstmt.setString(1, currentPlayerName);
 				pstmt.setInt(2, roomNumber);
 			}
 		};
-		jdbcTemplate.insert(UPDATE_CHESS_GAME_TURN_QUERY);
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.executeUpdate(UPDATE_CHESS_GAME_TURN_QUERY, pss);
 	}
 
 	public void gameover(int roomNumber) throws SQLException {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate() {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setParam(PreparedStatement pstmt) throws SQLException {
 				pstmt.setBoolean(1, false);
 				pstmt.setInt(2, roomNumber);
 			}
 		};
-		jdbcTemplate.insert(UPDATE_CHESS_GAME_OVER_QUERY);
+
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate.executeUpdate(UPDATE_CHESS_GAME_OVER_QUERY, pss);
 	}
 
 	public List<Integer> getNotOverAllRoomNumbers() throws SQLException {
-		SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
-			public void setParam(PreparedStatement pstmt) {
+			public void setParam(PreparedStatement pstmt) throws SQLException {
 				return;
 			}
+		};
 
+		RowMapper rm = new RowMapper() {
 			@Override
 			public Object mapRow(ResultSet rs) throws SQLException {
 				List<Integer> roomNumbers = new ArrayList<>();
@@ -92,6 +101,7 @@ public class ChessGameDAO {
 			}
 		};
 
-		return (List<Integer>) jdbcTemplate.executeQuery(SELECT_NOT_OVER_CHESS_GAME);
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		return (List<Integer>) jdbcTemplate.executeQuery(SELECT_NOT_OVER_CHESS_GAME, pss, rm);
 	}
 }

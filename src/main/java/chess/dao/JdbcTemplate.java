@@ -5,14 +5,21 @@ import java.sql.SQLException;
 
 import chess.database.DatabaseConnection;
 
-public abstract class JdbcTemplate {
-	public void insert(String sql) throws SQLException {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-			setParam(pstmt);
-			pstmt.executeUpdate();
+public class JdbcTemplate {
+	public Object executeQuery(String sql, PreparedStatementSetter pss, RowMapper rm) throws SQLException {
+		try {
+			PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql);
+			pss.setParam(pstmt);
+			return rm.mapRow(pstmt.executeQuery());
+		} catch (Exception e) {
+			throw new SQLException();
 		}
 	}
 
-	public abstract void setParam(PreparedStatement pstmt) throws SQLException;
-
+	public void executeUpdate(String sql, PreparedStatementSetter pss) throws SQLException {
+		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
+			pss.setParam(pstmt);
+			pstmt.executeUpdate();
+		}
+	}
 }
