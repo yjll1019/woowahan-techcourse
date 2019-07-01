@@ -27,58 +27,35 @@ public class PieceDAO {
 	}
 
 	public void addPiece(int roomNumber, Piece piece) throws SQLException {
-		PreparedStatementSetter pss = new PreparedStatementSetter() {
-			@Override
-			public void setParam(PreparedStatement pstmt) throws SQLException {
-				pstmt.setString(1, piece.getPlayer().name());
-				pstmt.setString(2, piece.getChessType());
-				pstmt.setInt(3, piece.getCoordinateX());
-				pstmt.setInt(4, piece.getCoordinateY());
-				pstmt.setInt(5, roomNumber);
-			}
-		};
-
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		jdbcTemplate.executeUpdate(INSERT_PIECE, pss);
+		jdbcTemplate.executeUpdate(INSERT_PIECE, piece.getPlayer().name(), piece.getChessType(),
+				piece.getCoordinateX(), piece.getCoordinateY(), roomNumber);
 	}
 
 	public void deleteAllPieces(int roomNumber) throws SQLException {
-		PreparedStatementSetter pss = new PreparedStatementSetter() {
-			@Override
-			public void setParam(PreparedStatement pstmt) throws SQLException {
-				pstmt.setInt(1, roomNumber);
-
-			}
-		};
-
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		jdbcTemplate.executeUpdate(DELETE_ALL_PIECES_QUERY, pss);
+		jdbcTemplate.executeUpdate(DELETE_ALL_PIECES_QUERY, roomNumber);
 	}
 
 	public List<Piece> getChessPieces(int roomNumber) throws SQLException {
 		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
-			public void setParam(PreparedStatement pstmt) throws SQLException {
+			public void setParams(PreparedStatement pstmt) throws SQLException {
 				pstmt.setInt(1, roomNumber);
 			}
 		};
 
-		RowMapper rm = new RowMapper() {
+		RowMapper<Piece> rm = new RowMapper<Piece>() {
 			@Override
-			public Object mapRow(ResultSet rs) throws SQLException {
-				List<Piece> pieces = new ArrayList<>();
-
-				while (rs.next()) {
-					Player player = Player.valueOf(rs.getString(1));
-					Type type = Type.valueOf(rs.getString(2));
-					Position position = Position.getPosition(rs.getInt(3), rs.getInt(4));
-					pieces.add(ChessPiece.generatePiece(player, type, position));
-				}
-				return pieces;
+			public Piece mapRow(ResultSet rs) throws SQLException {
+				Player player = Player.valueOf(rs.getString(1));
+				Type type = Type.valueOf(rs.getString(2));
+				Position position = Position.getPosition(rs.getInt(3), rs.getInt(4));
+				return ChessPiece.generatePiece(player, type, position);
 			}
 		};
 
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		return (List<Piece>) jdbcTemplate.executeQuery(SELECT_PIECES_QUERY, pss, rm);
+		return jdbcTemplate.executeQueryForMultiple(SELECT_PIECES_QUERY, rm, pss);
 	}
 }
