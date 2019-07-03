@@ -1,9 +1,6 @@
 package chess.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +19,9 @@ public class JdbcTemplate {
 	}
 
 	public <T> List<T> executeQueryForMultiple(String sql, RowMapper<T> rm, PreparedStatementSetter pss) {
-		try {
-			PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql);
-			ResultSet rs;
-			pss.setParams(pstmt);
-			rs = pstmt.executeQuery();
+		try (Connection conn = DatabaseConnection.getConnection();
+			 PreparedStatement pstmt = createPreparedStatement(conn, sql, pss);
+			 ResultSet rs = pstmt.executeQuery()) {
 			List<T> result = new ArrayList<>();
 
 			while (rs.next()) {
@@ -38,13 +33,14 @@ public class JdbcTemplate {
 		}
 	}
 
+
 	public <T> T executeQuery(String sql, RowMapper<T> rm, Object... params) {
 		return executeQuery(sql, rm, createPreparedStatementSetter(params));
 	}
 
 	private void executeUpdate(String sql, PreparedStatementSetter pss) {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-			pss.setParams(pstmt);
+		try (Connection con = DatabaseConnection.getConnection();
+			 PreparedStatement pstmt = createPreparedStatement(con, sql, pss)) {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new DataAccessException(e);
@@ -55,20 +51,31 @@ public class JdbcTemplate {
 		executeUpdate(sql, createPreparedStatementSetter(params));
 	}
 
-	public int executeInsert(String sql, Object... params) {
-		try (PreparedStatement pstmt = DatabaseConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-			PreparedStatementSetter pss = createPreparedStatementSetter(params);
+	private PreparedStatement createPreparedStatement(Connection conn, String sql, PreparedStatementSetter pss) {
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pss.setParams(pstmt);
-			pstmt.executeUpdate();
-			ResultSet rs = pstmt.getGeneratedKeys();
-			if(!rs.next()) {
-				throw new DataAccessException();
-			}
-			return rs.getInt(ROUND_INDEX);
+			return pstmt;
 		} catch (SQLException e) {
 			throw new DataAccessException(e);
 		}
+	}
 
+	public int executeInsert(String sql, Object... params) {
+		try (Connection conn = DatabaseConnection.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			PreparedStatementSetter pss = createPreparedStatementSetter(params);
+			pss.setParams(pstmt);
+			pstmt.executeUpdate();
+			try (ResultSet rs = pstmt.getGeneratedKeys()) {
+				if (!rs.next()) {
+					throw new DataAccessException();
+				}
+				return rs.getInt(ROUND_INDEX);
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(e);
+		}
 	}
 
 	public PreparedStatementSetter createPreparedStatementSetter(Object[] params) {
