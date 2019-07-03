@@ -24,7 +24,7 @@ public class PieceDAO {
 
 	public void addPiece(int roomNumber, Piece piece) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		jdbcTemplate.executeUpdate(INSERT_PIECE, piece.getPlayer().name(), piece.getChessType(),
+		jdbcTemplate.executeInsert(INSERT_PIECE, piece.getPlayer().name(), piece.getChessType(),
 				piece.getCoordinateX(), piece.getCoordinateY(), roomNumber);
 	}
 
