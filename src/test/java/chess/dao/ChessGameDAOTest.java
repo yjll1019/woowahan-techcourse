@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ChessGameDAOTest {
 	@Test
-	void cru테스트() throws SQLException {
+	void cru테스트() {
 		ChessGameDAO chessGameDAO = new ChessGameDAO();
 		int chessGameId = chessGameDAO.addChessGame(Player.BLACK.name());
 		Player player = chessGameDAO.getChessGameTurn(chessGameId);

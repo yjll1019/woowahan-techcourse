@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PieceDAOTest {
 	@Test
-	void crd테스트() throws SQLException {
+	void crd테스트() {
 		ChessGameDAO chessGameDAO = new ChessGameDAO();
 		int chessGameId = chessGameDAO.addChessGame(Player.BLACK.name());
 
