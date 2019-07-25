@@ -1,14 +1,31 @@
 package techcourse.myblog.domain;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Article {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
 	private String contents;
 	private String coverUrl;
 
+	public Article() {
+	}
+
 	public Article(String title, String contents, String coverUrl) {
+		this.title = title;
+		this.contents = contents;
+		this.coverUrl = coverUrl;
+	}
+
+	public Article(Long id, String title, String contents, String coverUrl) {
+		this.id = id;
 		this.title = title;
 		this.contents = contents;
 		this.coverUrl = coverUrl;
@@ -32,10 +49,6 @@ public class Article {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public boolean matchId(Long articleId) {
-		return this.id.equals(articleId);
 	}
 
 	public void update(Article article) {

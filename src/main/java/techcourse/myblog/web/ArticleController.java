@@ -1,6 +1,10 @@
 package techcourse.myblog.web;
 
+import javax.servlet.http.HttpSession;
+
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.request.ArticleDto;
+import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.stereotype.Controller;
@@ -21,42 +25,66 @@ public class ArticleController {
 		return "index";
 	}
 
-	@GetMapping("writing")
-	public String createArticle() {
+	@GetMapping("/writing")
+	public String createArticle(HttpSession httpSession) {
+		if (!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		return "article-edit";
 	}
 
-	@PostMapping("articles")
-	public String saveArticle(Article article, Model model) {
-		model.addAttribute(article);
-		articleRepository.save(article);
-		return "article";
+	@PostMapping("/articles")
+	public String saveArticle(ArticleDto articleDto, HttpSession httpSession) {
+		if (!existSession(httpSession)) {
+			return "redirect:/";
+		}
+		Article article = articleDto.valueOfArticle();
+		Long id = articleRepository.save(article).getId();
+		return "redirect:/articles/" + id;
 	}
 
-	@GetMapping("articles/{articleId}")
+	@GetMapping("/articles/{articleId}")
 	public String getArticle(@PathVariable Long articleId, Model model) {
-		model.addAttribute("article", articleRepository.findById(articleId));
+		getArticleWhenExists(articleId, model);
 		return "article";
 	}
 
-	@GetMapping("articles/{articleId}/edit")
-	public String editArticle(@PathVariable Long articleId, Model model) {
-		model.addAttribute("article", articleRepository.findById(articleId));
+	@GetMapping("/articles/{articleId}/edit")
+	public String editArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
+		if (!existSession(httpSession)) {
+			return "redirect:/";
+		}
+		getArticleWhenExists(articleId, model);
 		return "article-edit";
 	}
 
-	@PutMapping("articles/{articleId}")
-	public String modifyArticle(@PathVariable Long articleId, Article article, Model model) {
-		article.setId(articleId);
-		articleRepository.update(article);
-		model.addAttribute(articleRepository.findById(articleId));
-		return "article";
+	private void getArticleWhenExists(Long articleId, Model model) {
+		Article article = articleRepository.findById(articleId)
+				.orElseThrow(NotFoundArticleException::new);
+		model.addAttribute("article", article);
 	}
 
-	@DeleteMapping("articles/{articleId}")
-	public String deleteArticle(@PathVariable Long articleId) {
+	@PutMapping("/articles/{articleId}")
+	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
+		if (!existSession(httpSession)) {
+			return "redirect:/";
+		}
+		Article article = articleDto.valueOfArticle(articleId);
+		articleRepository.save(article);
+		return "redirect:/articles/" + articleId;
+	}
+
+	@DeleteMapping("/articles/{articleId}")
+	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
+		if (!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		articleRepository.deleteById(articleId);
 		return "redirect:/";
+	}
+
+	private boolean existSession(HttpSession httpSession) {
+		return (httpSession.getAttribute("email") != null);
 	}
 }
 
