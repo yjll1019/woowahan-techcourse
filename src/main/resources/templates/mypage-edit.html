@@ -74,7 +74,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" name="email" th:text="${user.email}"></p>
+                                <input accept-charset="utf-8" class="form-control" name="email" readonly th:value="${user.email}"/>
                             </div>
                         </div>
                         <hr>
@@ -110,7 +110,7 @@
                                         <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-                                        <input class="form-control" name="facebookURL" th:value="${user.facebookURL}">
+                                        <input class="form-control" name="facebookUrl" th:value="${user.facebookUrl}">
                                     </div>
                                 </div>
                                 <hr>
@@ -124,7 +124,7 @@
                                         <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-                                        <input class="form-control" name="githubURL" th:value="${user.githubURL}">
+                                        <input class="form-control" name="githubUrl" th:value="${user.githubUrl}">
                                     </div>
                                 </div>
                             </div>
@@ -137,5 +137,16 @@
     </div>
 </div>
 <th:block th:include="common/js"></th:block>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var result = /*[[${error}]]*/ '';
+    if(result != null) {
+        alert(error);
+        location.href = "/mypage/edit";
+    }
+
+    /*]]>*/
+</script>
 </body>
 </html>

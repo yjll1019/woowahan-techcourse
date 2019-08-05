@@ -26,7 +26,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5 pointer">Welcome Brown!</h1>
             </div>
         </div>
     </div>
@@ -60,8 +60,8 @@
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:text="${article.title}" th:value="${article.title}" class="mrg-btm-20 text-bold"></h2>
-                                                        <p th:text="${#strings.length(article.contents) < 100 ? article.contents : #strings.concat(#strings.substring(article.contents, 0, 100), '...')}"></p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}" th:value="${article.title}"></h2>
+                                                        <p th:text="${#strings.length(article.title) < 100 ? article.title : #strings.concat(#strings.substring(article.title, 0, 100), '...')}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>

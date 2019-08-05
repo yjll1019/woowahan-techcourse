@@ -1,6 +1,6 @@
 package techcourse.myblog.web;
 
-import techcourse.myblog.exception.*;
+import techcourse.myblog.service.exception.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -43,5 +43,19 @@ public class GlobalExceptionHandler {
 	public String handlerExistEmailException(NotMatchPasswordException notMatchPasswordException, Model model) {
 		model.addAttribute("error", notMatchPasswordException.getMessage());
 		return "leave-user";
+	}
+
+	@ExceptionHandler(value = UnauthorizedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handlerExistEmailException(UnauthorizedException unauthorizedException, Model model) {
+		model.addAttribute("error", unauthorizedException.getMessage());
+		return "index";
+	}
+
+	@ExceptionHandler(value = NotFoundCommentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handlerExistEmailException(NotFoundCommentException notFoundCommentException, Model model) {
+		model.addAttribute("error", notFoundCommentException.getMessage());
+		return "index";
 	}
 }

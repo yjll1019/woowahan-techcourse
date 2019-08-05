@@ -1,13 +1,7 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -19,8 +13,6 @@ import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,28 +20,9 @@ public class ArticleControllerTests {
 	private String title = "제목";
 	private String contents = "contents";
 	private String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-	private User user = new User();
 
 	@Autowired
 	private WebTestClient webTestClient;
-
-	@Autowired
-	private ArticleRepository articleRepository;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@BeforeEach
-	void setUp() {
-		userRepository.deleteAll();
-		UserDto userDto = new UserDto();
-		userDto.setUsername("tiber");
-		userDto.setEmail("tiber@naver.com");
-		userDto.setPassword("asdfASDF1@");
-
-		user.saveUser(userDto);
-		userRepository.save(user);
-	}
 
 	private String getCookie() {
 		return webTestClient
@@ -74,7 +47,7 @@ public class ArticleControllerTests {
 	@Test
 	void canNotSaveArticle() {
 		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.POST, "/articles", title, coverUrl, contents);
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	@Test
@@ -90,27 +63,24 @@ public class ArticleControllerTests {
 	@Test
 	void canNotMoveArticleWritingForm() {
 		StatusAssertions statusAssertions = request(HttpMethod.GET, "/writing");
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	@Test
 	void findByIndex() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-		requestWithSession(HttpMethod.GET, "/articles" + articleId).isOk();
+		requestWithSession(HttpMethod.GET, "/articles/1").isOk();
 	}
 
 	@Test
 	void deleteArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/" + articleId);
+		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/2");
 		checkRedirect(statusAssertions, "Location", ".+/");
-		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}
 
 	@Test
 	void canNotDeleteArticle() {
 		StatusAssertions statusAssertions = request(HttpMethod.DELETE, "/articles/1");
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	@Test
@@ -142,25 +112,25 @@ public class ArticleControllerTests {
 
 	@Test
 	void updateArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-		StatusAssertions statusAssertions = articlePutOrPostRequestWithSession(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
+		StatusAssertions statusAssertions = articlePutOrPostRequestWithSession(HttpMethod.PUT, "/articles/" + 1,
+				"updatedTitle", "updatedCoverUrl", "updatedContents");
 		checkRedirect(statusAssertions, "Location", ".+/articles/[1-9][0-9]*");
 	}
 
 	@Test
 	void canNotUpdateArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
-		checkRedirect(statusAssertions, "Location", ".+/");
+		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + 1,
+				"updatedTitle", "updatedCoverUrl", "updatedContents");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
-	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectURLRegex) {
+	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectUrlRegex) {
 		statusAssertions.isFound()
 				.expectHeader()
-				.valueMatches(name, redirectURLRegex);
+				.valueMatches(name, redirectUrlRegex);
 	}
 
-	private StatusAssertions articlePutOrPostRequestWithSession(HttpMethod httpMethod, String requestURI, String title, String coverURL, String contents) {
+	private StatusAssertions articlePutOrPostRequestWithSession(HttpMethod httpMethod, String requestURI, String title, String coverUrl, String contents) {
 		return webTestClient
 				.method(httpMethod)
 				.uri(requestURI)
@@ -168,24 +138,22 @@ public class ArticleControllerTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("title", title)
-						.with("coverUrl", coverURL)
+						.with("coverUrl", coverUrl)
 						.with("contents", contents))
 				.exchange()
 				.expectStatus();
 	}
 
-	private StatusAssertions articlePutOrPostRequest(HttpMethod httpMethod, String requestURI, String title, String coverURL, String contents) {
+	private StatusAssertions articlePutOrPostRequest(HttpMethod httpMethod, String requestURI, String title, String coverUrl, String contents) {
 		return webTestClient
 				.method(httpMethod)
 				.uri(requestURI)
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("title", title)
-						.with("coverUrl", coverURL)
+						.with("coverUrl", coverUrl)
 						.with("contents", contents))
 				.exchange()
 				.expectStatus();
 	}
-
-
 }

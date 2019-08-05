@@ -2,13 +2,14 @@ package techcourse.myblog.service;
 
 import java.util.List;
 
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.dto.request.UserEditProfileDto;
-import techcourse.myblog.exception.AlreadyExistEmailException;
-import techcourse.myblog.exception.NotFoundUserException;
-import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.domain.user.Information;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.AlreadyExistEmailException;
+import techcourse.myblog.service.exception.NotFoundUserException;
+import techcourse.myblog.service.exception.NotMatchPasswordException;
+import techcourse.myblog.service.request.UserChangeableInfoDto;
+import techcourse.myblog.service.request.UserSignUpInfoDto;
 
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,12 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public void signUp(UserDto userDto) {
-		if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+	public void signUp(UserSignUpInfoDto userSignUpInfoDto) {
+		Information information = userSignUpInfoDto.valueOfInfo();
+		if (userRepository.findByInformationEmail(userSignUpInfoDto.getEmail()).isPresent()) {
 			throw new AlreadyExistEmailException();
 		}
-		User user = new User();
-		user.saveUser(userDto);
+		User user = new User(information);
 		userRepository.save(user);
 	}
 
@@ -33,22 +34,23 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public User findUser(String email) {
-		return userRepository.findByEmail(email)
+	public User findUser(User user) {
+		return userRepository.findByInformationEmail(user.getEmail())
 				.orElseThrow(NotFoundUserException::new);
 	}
 
-	public void leaveUser(String email, String password) {
-		User user = findUser(email);
+	public void leaveUser(User loginUser, String password) {
+		User user = findUser(loginUser);
 		if (!user.matchPassword(password)) {
 			throw new NotMatchPasswordException();
 		}
 		userRepository.delete(user);
 	}
 
-	public User editUser(String email, UserEditProfileDto userEditProfileDto) {
-		User user = findUser(email);
-		user.editUser(userEditProfileDto);
+	public User editUser(User loginUser, UserChangeableInfoDto userChangeableInfoDto) {
+		Information information = userChangeableInfoDto.valueOfInfo(loginUser);
+		User user = findUser(loginUser);
+		user.editUser(information);
 		userRepository.save(user);
 		return user;
 	}

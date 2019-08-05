@@ -1,11 +1,7 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -20,25 +16,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LoginControllerTests {
-	private User user = new User();
-
 	@Autowired
 	private WebTestClient webTestClient;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@BeforeEach
-	void setUp() {
-		userRepository.deleteAll();
-		UserDto userDto = new UserDto();
-		userDto.setUsername("tiber");
-		userDto.setEmail("tiber@naver.com");
-		userDto.setPassword("asdfASDF1@");
-
-		user.saveUser(userDto);
-		userRepository.save(user);
-	}
 
 	@Test
 	void loginSuccess() {
@@ -55,13 +34,13 @@ class LoginControllerTests {
 		requestForLogin("tiber@naver.com", "asdfASDF1@!").isBadRequest();
 	}
 
-	private StatusAssertions requestForLogin(String email, String requestUri) {
+	private StatusAssertions requestForLogin(String email, String password) {
 		return webTestClient.post()
 				.uri("/login")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("email", email)
-						.with("password", requestUri))
+						.with("password", password))
 				.exchange()
 				.expectStatus();
 	}
