@@ -1,65 +1,45 @@
 package techcourse.myblog.service;
 
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.comment.Contents;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.service.exception.NotFoundCommentException;
-import techcourse.myblog.service.exception.UnauthorizedException;
-
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.dto.response.LoginUser;
+import techcourse.myblog.exception.NotFoundObjectException;
+import techcourse.myblog.domain.dto.CommentDto;
+import techcourse.myblog.domain.user.User;
+
+import javax.transaction.Transactional;
 
 @Service
 public class CommentService {
-	private CommentRepository commentRepository;
 	private UserService userService;
-	private ArticleService articleService;
+	private CommentRepository commentRepository;
 
-	public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
-		this.commentRepository = commentRepository;
+	public CommentService(UserService userService, CommentRepository commentRepository) {
 		this.userService = userService;
-		this.articleService = articleService;
+		this.commentRepository = commentRepository;
 	}
 
-	public Comment save(User loginUser, Long articleId, Contents contents) {
-		User user = userService.findUser(loginUser);
-		Article article = articleService.findById(articleId);
-		Comment comment = new Comment(user, contents);
-		article.addComment(comment);
+	public Comment createComment(CommentDto commentDto, LoginUser loginUser) {
+		User user = userService.findByEmail(loginUser.getEmail());
+		Comment comment = commentDto.toEntity(user);
 		return commentRepository.save(comment);
 	}
 
-	@Transactional
-	public void update(User loginUser, Long articleId, Long commentId, Contents contents) {
-		Comment comment = findById(commentId);
-		existArticle(articleId);
-		confirmAuthorization(loginUser, comment.getAuthor());
-		comment.update(contents);
-	}
-
-	public Comment findById(Long commentId) {
-		return commentRepository.findById(commentId)
-				.orElseThrow(NotFoundCommentException::new);
-	}
-
-	private void existArticle(Long articleId) {
-		articleService.findById(articleId);
-	}
-
-	private void confirmAuthorization(User loginUser, User commentAuthor) {
-		User user = userService.findUser(loginUser);
-		if (!user.matchUser(commentAuthor)) {
-			throw new UnauthorizedException();
-		}
-	}
-
-	@Transactional
-	public void delete(User loginUser, Long articleId, Long commentId) {
-		Comment comment = findById(commentId);
-		confirmAuthorization(loginUser, comment.getAuthor());
-		existArticle(articleId);
+	public void deleteComment(Long commentId, LoginUser loginUser) {
+		User user = userService.findByEmail(loginUser.getEmail());
+		Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
+		comment.checkCorrespondingAuthor(user);
 		commentRepository.deleteById(commentId);
+	}
+
+	@Transactional
+	public Comment updateComment(Long commentId, LoginUser loginUser, CommentDto commentDto) {
+		User user = userService.findByEmail(loginUser.getEmail());
+		Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
+		Comment updateComment = commentDto.toEntity(user);
+		comment.update(updateComment, user);
+		return comment;
 	}
 }

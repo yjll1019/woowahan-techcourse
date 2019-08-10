@@ -1,20 +1,17 @@
-insert into user(email, password, username)
-values ('tiber@naver.com', 'asdfASDF1@', '티버');
+INSERT INTO user(user_name, email, password, create_time)
+VALUES ('heejoo', 'heejoo@gmail.com', 'Aa12345!',now());
 
-insert into article(text, cover_url, title, author)
-values ('text', 'www.coverUrl.com', 'title', 1);
+INSERT INTO user(user_name, email, password, create_time)
+VALUES ('cony', 'cony@gmail.com', 'Aa12345!', now());
 
-insert into article(text, cover_url, title, author)
-values ('text', 'www.coverUrl.com', 'title', 1);
+INSERT INTO article(title, cover_url, contents, author, create_time)
+VALUES ('title', 'coverUrl', 'contents', 1, now());
 
-insert into comment(text, create_date, article_id, author)
-values ('text', now(), 1, 1);
+INSERT INTO article(title, cover_url, contents, author, create_time)
+VALUES ('title', 'coverUrl', 'contents', 1, now());
 
-insert into comment(text, create_date, article_id, author)
-values ('text', now(), 1, 1);
+INSERT INTO comment(contents, author, article_id, create_time)
+VALUES ('sdkasdsaldas', 1, 1, now());
 
-insert into comment(text, create_date, article_id, author)
-values ('text', now(), 2, 1);
-
-insert into comment(text, create_date, article_id, author)
-values ('text', now(), 2, 1);
+INSERT INTO comment(contents, author, article_id, create_time)
+VALUES ('sssssssss', 1, 1, now());

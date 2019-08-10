@@ -1,57 +1,60 @@
 package techcourse.myblog.service;
 
-import java.util.List;
-
-import techcourse.myblog.domain.user.Information;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.exception.AlreadyExistEmailException;
-import techcourse.myblog.service.exception.NotFoundUserException;
-import techcourse.myblog.service.exception.NotMatchPasswordException;
-import techcourse.myblog.service.request.UserChangeableInfoDto;
-import techcourse.myblog.service.request.UserSignUpInfoDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Service;
 
+import techcourse.myblog.exception.NotFoundObjectException;
+import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.dto.UserUpdateRequestDto;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service
 public class UserService {
-	private final UserRepository userRepository;
+	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-	public UserService(final UserRepository userRepository) {
+	private UserRepository userRepository;
+
+	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
-	public void signUp(UserSignUpInfoDto userSignUpInfoDto) {
-		Information information = userSignUpInfoDto.valueOfInfo();
-		if (userRepository.findByInformationEmail(userSignUpInfoDto.getEmail()).isPresent()) {
-			throw new AlreadyExistEmailException();
-		}
-		User user = new User(information);
+	public void createNewUser(UserDto userDto) {
+		checkValidUserInformation(userDto);
+		User user = userDto.toEntity();
 		userRepository.save(user);
+		log.info("새로운 {} 유저가 가입했습니다.", user.getUserName());
 	}
 
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
 
-	public User findUser(User user) {
-		return userRepository.findByInformationEmail(user.getEmail())
-				.orElseThrow(NotFoundUserException::new);
+	@Transactional
+	public void updateUser(String email, UserUpdateRequestDto userUpdateRequestDto) {
+		User user = findByEmail(email);
+		user.changeUserName(userUpdateRequestDto.getUserName());
 	}
 
-	public void leaveUser(User loginUser, String password) {
-		User user = findUser(loginUser);
-		if (!user.matchPassword(password)) {
-			throw new NotMatchPasswordException();
-		}
+	public void deleteUser(String email) {
+		User user = findByEmail(email);
 		userRepository.delete(user);
 	}
 
-	public User editUser(User loginUser, UserChangeableInfoDto userChangeableInfoDto) {
-		Information information = userChangeableInfoDto.valueOfInfo(loginUser);
-		User user = findUser(loginUser);
-		user.editUser(information);
-		userRepository.save(user);
-		return user;
+	private void checkValidUserInformation(UserDto userDto) {
+		if (userRepository.existsByEmail(userDto.getEmail())) {
+			throw new NotValidUserInfoException("중복된 이메일 입니다.");
+		}
+	}
+
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email)
+				.orElseThrow(NotFoundObjectException::new);
 	}
 }

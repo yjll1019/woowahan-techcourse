@@ -1,26 +1,29 @@
 package techcourse.myblog.service;
 
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.service.request.UserLoginDto;
-
 import org.springframework.stereotype.Service;
+
+import techcourse.myblog.domain.dto.response.LoginUser;
+import techcourse.myblog.exception.LoginException;
+import techcourse.myblog.domain.dto.AuthenticationDto;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class LoginService {
-	private final UserRepository userRepository;
+
+	private UserRepository userRepository;
 
 	public LoginService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
-	public User login(UserLoginDto userLoginDto) {
-		User loginUser = userRepository.findByInformationEmail(userLoginDto.getEmail())
-				.orElseThrow(LoginException::new);
-		if (!loginUser.matchPassword(userLoginDto.getPassword())) {
-			throw new LoginException();
-		}
-		return loginUser;
+	public LoginUser login(AuthenticationDto authenticationDto) {
+		User user = userRepository.findByEmail(authenticationDto.getEmail())
+				.orElseThrow(LoginException::notFoundEmail);
+		Optional.of(user).filter(u -> u.matchPassword(authenticationDto.getPassword()))
+				.orElseThrow(LoginException::notMatchPassword);
+		return LoginUser.toLoginUser(user);
 	}
 }

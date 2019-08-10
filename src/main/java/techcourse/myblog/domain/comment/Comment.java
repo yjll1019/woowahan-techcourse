@@ -1,60 +1,44 @@
 package techcourse.myblog.domain.comment;
 
-import java.time.LocalDateTime;
-import javax.persistence.*;
-
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import techcourse.myblog.domain.date.BaseEntity;
+import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.domain.user.User;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import javax.persistence.*;
 
-@EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Comment {
+@Getter
+@NoArgsConstructor
+public class Comment extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Embedded
-	private Contents contents;
-
-	@CreatedDate
-	@Column(name = "create_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private LocalDateTime createDate;
 
 	@ManyToOne
 	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
 	private User author;
 
-	private Comment() {
-	}
+	@Column(nullable = false)
+	@Lob
+	private String contents;
 
-	public Comment(User user, Contents contents) {
-		this.author = user;
+	@Builder
+	public Comment(User author, String contents) {
+		this.author = author;
 		this.contents = contents;
 	}
 
-	public Long getId() {
-		return id;
+	public void checkCorrespondingAuthor(User user) {
+		if (!author.equals(user)) {
+			throw new InvalidAuthorException();
+		}
 	}
 
-	public String getText() {
-		return this.contents.getText();
-	}
-
-	public LocalDateTime getCreateDate() {
-		return createDate;
-	}
-
-	public User getAuthor() {
-		return author;
-	}
-
-	public void update(Contents contents) {
-		this.contents = contents;
-	}
-
-	public boolean matchComment(Comment comment) {
-		return this.id.equals(comment.id);
+	public void update(Comment updateComment, User user) {
+		checkCorrespondingAuthor(user);
+		this.contents = updateComment.contents;
 	}
 }

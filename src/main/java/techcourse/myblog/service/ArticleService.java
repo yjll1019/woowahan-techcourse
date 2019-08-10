@@ -1,59 +1,84 @@
 package techcourse.myblog.service;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.Contents;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.dto.response.ArticleResponseDto;
+import techcourse.myblog.domain.dto.response.CommentResponseDto;
+import techcourse.myblog.domain.dto.response.LoginUser;
+import techcourse.myblog.exception.NotFoundObjectException;
+import techcourse.myblog.domain.dto.ArticleDto;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.exception.NotFoundArticleException;
-import techcourse.myblog.service.exception.UnauthorizedException;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ArticleService {
-	private ArticleRepository articleRepository;
-	private UserService userService;
+	private final ArticleRepository articleRepository;
+	private final UserService userService;
 
 	public ArticleService(ArticleRepository articleRepository, UserService userService) {
 		this.articleRepository = articleRepository;
 		this.userService = userService;
 	}
 
-	public Long saveArticle(User loginUser, Contents contents) {
-		User user = userService.findUser(loginUser);
-		Article article = new Article(user, contents);
-		return articleRepository.save(article).getId();
+	public ArticleResponseDto createArticle(ArticleDto articleDto, LoginUser loginUser) {
+		User user = userService.findByEmail(loginUser.getEmail());
+		Article article = articleDto.toEntity(user);
+		article = articleRepository.save(article);
+		return ArticleResponseDto.toArticleResponseDto(article);
 	}
 
-	public List<Article> findAll() {
-		return articleRepository.findAll();
-	}
-
-	@Transactional
-	public void update(Long articleId, User loginUser, Contents contents) {
-		Article article = findById(articleId);
-		confirmAuthorization(loginUser, article.getId());
-		article.update(contents);
-	}
-
-	public void confirmAuthorization(User user, Long articleId) {
-		Article article = findById(articleId);
-		if (!userService.findUser(user).matchUser(article.getAuthor())) {
-			throw new UnauthorizedException();
-		}
-	}
-
-	public Article findById(Long articleId) {
+	private Article findArticle(Long articleId) {
 		return articleRepository.findById(articleId)
-				.orElseThrow(NotFoundArticleException::new);
+				.orElseThrow(NotFoundObjectException::new);
+	}
+
+	public ArticleResponseDto findArticleAndGetDto(Long articleId) {
+		return ArticleResponseDto.toArticleResponseDto(findArticle(articleId));
 	}
 
 	@Transactional
-	public void delete(User loginUser, Long articleId) {
-		confirmAuthorization(loginUser, articleId);
+	public ArticleResponseDto updateArticle(Long articleId, ArticleDto articleDto, LoginUser loginUser) {
+		User user = userService.findByEmail(loginUser.getEmail());
+		Article article = findArticle(articleId);
+		article.update(articleDto.toEntity(user));
+
+		return ArticleResponseDto.toArticleResponseDto(article);
+	}
+
+	public void deleteArticle(Long articleId, LoginUser loginUser) {
+		Article article = findArticle(articleId);
+		article.checkCorrespondingAuthor(loginUser.getEmail());
 		articleRepository.deleteById(articleId);
+	}
+
+	public List<CommentResponseDto> findAllComments(Long articleId) {
+		List<Comment> comments = articleRepository.findById(articleId)
+				.orElseThrow(NotFoundObjectException::new)
+				.getComments();
+		return convertCommentsToDto(comments);
+	}
+
+	private List<CommentResponseDto> convertCommentsToDto(List<Comment> comments) {
+		List<CommentResponseDto> commentDtos = new ArrayList<>();
+		comments.forEach(x ->
+				commentDtos.add(new CommentResponseDto(x.getId(), x.getAuthor().getUserName(), x.getContents())));
+		return commentDtos;
+	}
+
+	@Transactional
+	public Article addComment(Long articleId, Comment comment) {
+		Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
+		article.addComment(comment);
+		return article;
+	}
+
+	public void checkAvailableUpdateUser(Long articleId, String email) {
+		findArticle(articleId).checkCorrespondingAuthor(email);
 	}
 }
