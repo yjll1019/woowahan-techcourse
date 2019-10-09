@@ -11,6 +11,10 @@ public class HandlerKey {
         this.requestMethod = requestMethod;
     }
 
+    public boolean isSameUrl(String url) {
+        return this.url.equals(url);
+    }
+
     @Override
     public String toString() {
         return "HandlerKey [url=" + url + ", requestMethod=" + requestMethod + "]";
