@@ -1,16 +1,19 @@
 package nextstep.mvc.tobe;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import nextstep.utils.JsonUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,5 +61,18 @@ public class JsonViewTest {
 
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8_VALUE);
         logger.debug("response body : {}", response.getContentAsString());
+    }
+
+    @Test
+    void convert_json_from_model() throws JsonProcessingException {
+        Map<String, Object> model = new HashMap<>();
+        Car expected = new Car("Black", "Sonata");
+        model.put("car", expected);
+        model.put("name", "포비");
+
+        List<String> jsonFromModel = new JsonView().convertJsonFromModel(model);
+
+        assertThat(jsonFromModel.get(0)).isEqualTo("{\"color\":\"Black\",\"type\":\"Sonata\"}");
+        assertThat(jsonFromModel.get(1)).isEqualTo("\"포비\"");
     }
 }
