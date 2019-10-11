@@ -1,14 +1,13 @@
 package nextstep.mvc.tobe;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.PrintWriter;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nextstep.mvc.tobe.exception.NotFoundModelException;
 import nextstep.web.support.MediaType;
 
 public class JsonView implements View {
@@ -16,26 +15,33 @@ public class JsonView implements View {
 
     @Override
     public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<String> modelToJson = convertJsonFromModel(model);
-
-        writeResponse(response, modelToJson);
+        if (model.size() == 0) {
+            return;
+        }
 
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        Object responseData = convertJsonFromModel(model);
+        writeResponse(response.getWriter(), responseData);
     }
 
-    private void writeResponse(HttpServletResponse response, List<String> modelToJson) throws IOException {
-        for (String data : modelToJson) {
-            response.getWriter().write(data);
-        }
+    private void writeResponse(PrintWriter printer, Object model) throws IOException {
+        String responseData = mapper.writeValueAsString(model);
+
+        printer.write(responseData);
     }
 
-    public List<String> convertJsonFromModel(Map<String, ?> model) throws JsonProcessingException {
-        List<String> modelToJson = new ArrayList<>();
-
-        for (String key : model.keySet()) {
-            modelToJson.add(mapper.writeValueAsString(model.get(key)));
+    public Object convertJsonFromModel(Map<String, ?> model) {
+        if (model.size() == 1) {
+            return getValue(model);
         }
 
-        return modelToJson;
+        return model;
+    }
+
+    private Object getValue(Map<String, ?> model) {
+        return model.values()
+                .stream()
+                .findFirst()
+                .orElseThrow(NotFoundModelException::new);
     }
 }
