@@ -5,6 +5,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.Duration;
 
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
@@ -30,6 +31,9 @@ public class NsWebTestClient {
 
     public <T> URI createResource(String url, T body, Class<T> clazz) {
         EntityExchangeResult<byte[]> response = testClientBuilder.build()
+                .mutate()
+                .responseTimeout(Duration.ofMillis(30000))
+                .build()
                 .post()
                 .uri(url)
                 .body(Mono.just(body), clazz)
