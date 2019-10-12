@@ -62,17 +62,4 @@ public class JsonViewTest {
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8_VALUE);
         logger.debug("response body : {}", response.getContentAsString());
     }
-
-    @Test
-    void convert_json_from_model() throws JsonProcessingException {
-        Map<String, Object> model = new HashMap<>();
-        Car expected = new Car("Black", "Sonata");
-        model.put("car", expected);
-        model.put("name", "포비");
-
-        List<String> jsonFromModel = new JsonView().convertJsonFromModel(model);
-
-        assertThat(jsonFromModel.get(0)).isEqualTo("{\"color\":\"Black\",\"type\":\"Sonata\"}");
-        assertThat(jsonFromModel.get(1)).isEqualTo("\"포비\"");
-    }
 }
