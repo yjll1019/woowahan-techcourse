@@ -1,16 +1,22 @@
 package slipp.controller;
 
-import nextstep.mvc.asis.Controller;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LogoutController implements Controller {
-    @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+import nextstep.mvc.tobe.JspView;
+import nextstep.mvc.tobe.ModelAndView;
+import nextstep.web.annotation.Controller;
+import nextstep.web.annotation.RequestMapping;
+import nextstep.web.annotation.RequestMethod;
+
+@Controller
+public class LogoutController {
+    @RequestMapping(value = "/users/logout", method = RequestMethod.GET)
+    public ModelAndView logout(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
         session.removeAttribute(UserSessionUtils.USER_SESSION_KEY);
-        return "redirect:/";
+
+        return new ModelAndView(new JspView("redirect:/"));
     }
 }

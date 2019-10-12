@@ -8,7 +8,6 @@ import javax.servlet.ServletRegistration;
 import nextstep.mvc.DispatcherServlet;
 import nextstep.mvc.tobe.AnnotationHandlerMapping;
 import nextstep.mvc.tobe.adapter.AnnotationHandlerAdapter;
-import nextstep.mvc.tobe.adapter.ManualHandlerAdapter;
 import nextstep.web.WebApplicationInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +18,8 @@ public class SlippWebApplicationInitializer implements WebApplicationInitializer
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         DispatcherServlet dispatcherServlet = new DispatcherServlet(
-                Arrays.asList(new ManualHandlerMapping(), new AnnotationHandlerMapping()),
-                Arrays.asList(new ManualHandlerAdapter(), new AnnotationHandlerAdapter()));
+                Arrays.asList(new AnnotationHandlerMapping()),
+                Arrays.asList(new AnnotationHandlerAdapter()));
 
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", dispatcherServlet);
         dispatcher.setLoadOnStartup(1);
