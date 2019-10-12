@@ -41,7 +41,8 @@ public class JacksonLearningTest {
 
         String jsonOfCars = objectMapper.writeValueAsString(actualModels);
 
-        List<Car> actualCars = objectMapper.readValue(jsonOfCars, new TypeReference<List<Car>>(){});
+        List<Car> actualCars = objectMapper.readValue(jsonOfCars, new TypeReference<List<Car>>() {
+        });
 
         assertThat(actualModels).isEqualTo(actualCars);
     }
@@ -57,7 +58,8 @@ public class JacksonLearningTest {
         System.out.println(actualModels);
 
         Map<String, Object> expectedModels = objectMapper.readValue(jsonOfModels,
-                new TypeReference<Map<String, Object>>(){});
+                new TypeReference<Map<String, Object>>() {
+                });
 
         Car expectedCar = objectMapper.convertValue(expectedModels.get("car"), Car.class);
 

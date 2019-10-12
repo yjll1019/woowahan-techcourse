@@ -1,16 +1,16 @@
 package slipp.controller;
 
+import java.net.URI;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slipp.domain.User;
 import slipp.dto.UserCreatedDto;
 import slipp.dto.UserUpdatedDto;
-import slipp.domain.User;
 import support.test.NsWebTestClient;
-
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
