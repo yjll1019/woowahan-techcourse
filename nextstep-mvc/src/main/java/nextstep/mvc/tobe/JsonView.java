@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nextstep.mvc.tobe.exception.NotFoundModelException;
+import nextstep.mvc.tobe.exception.EmptyModelException;
 import nextstep.web.support.MediaType;
 
 public class JsonView implements View {
@@ -43,6 +43,6 @@ public class JsonView implements View {
         return model.values()
                 .stream()
                 .findFirst()
-                .orElseThrow(NotFoundModelException::new);
+                .orElseThrow(EmptyModelException::new);
     }
 }
