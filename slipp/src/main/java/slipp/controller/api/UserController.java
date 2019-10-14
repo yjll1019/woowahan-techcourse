@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nextstep.mvc.tobe.JsonView;
 import nextstep.mvc.tobe.ModelAndView;
-import nextstep.utils.JsonUtils;
 import nextstep.web.annotation.Controller;
 import nextstep.web.annotation.RequestMapping;
 import nextstep.web.annotation.RequestMethod;
@@ -28,14 +27,10 @@ public class UserController {
 
     @RequestMapping(value = "/api/users", method = RequestMethod.POST)
     public ModelAndView createUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String requestBody = req.getReader()
-                .lines()
-                .collect(Collectors.joining());
-
-        logger.debug("requestBody : {}", requestBody);
-
-        User user = JsonUtils.toObject(requestBody, User.class);
+        User user = objectMapper.readValue(req.getReader(), User.class);
         DataBase.addUser(user);
+
+        logger.debug("User : {}", user);
 
         resp.setHeader("Location", "/api/users?userId=" + user.getUserId());
         resp.setStatus(HttpServletResponse.SC_CREATED);
