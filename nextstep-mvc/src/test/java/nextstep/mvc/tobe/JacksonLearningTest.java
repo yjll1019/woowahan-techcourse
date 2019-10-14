@@ -55,7 +55,6 @@ public class JacksonLearningTest {
         actualModels.put("car", actualCar);
 
         String jsonOfModels = objectMapper.writeValueAsString(actualModels);
-        System.out.println(actualModels);
 
         Map<String, Object> expectedModels = objectMapper.readValue(jsonOfModels,
                 new TypeReference<Map<String, Object>>() {

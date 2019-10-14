@@ -98,7 +98,8 @@ public class JsonViewTest {
         Object actual = jsonView.convertJsonFromModel(expectedModels);
 
         Map<String, Object> actualModels = objectMapper.convertValue(
-                actual, new TypeReference<Map<String, Object>>() {});
+                actual, new TypeReference<Map<String, Object>>() {
+                });
 
         Car actualCar = objectMapper.convertValue(expectedModels.get("car"), Car.class);
 
