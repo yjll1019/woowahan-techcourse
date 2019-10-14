@@ -67,13 +67,6 @@ public class JsonViewTest {
     }
 
     @Test
-    @DisplayName("맵이 비어있을 때 예외 발생")
-    void throw_empty_model_exception() {
-        JsonView jsonView = new JsonView();
-        assertThrows(EmptyModelException.class, () -> jsonView.convertJsonFromModel(new HashMap<>()));
-    }
-
-    @Test
     @DisplayName("전달하려는 모델의 개수가 1개일 때 value값 반환")
     void return_value() {
         JsonView jsonView = new JsonView();
