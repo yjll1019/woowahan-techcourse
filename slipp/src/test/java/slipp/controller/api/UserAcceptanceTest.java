@@ -1,4 +1,4 @@
-package slipp.controller;
+package slipp.controller.api;
 
 import java.net.URI;
 
