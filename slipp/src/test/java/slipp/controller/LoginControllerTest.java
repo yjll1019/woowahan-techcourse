@@ -22,6 +22,14 @@ class LoginControllerTest {
     }
 
     @Test
+    void move_login_page() {
+        webTestClient.get()
+                .uri("/users/loginForm")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     void login_success() {
         webTestClient.post()
                 .uri("/users/login")

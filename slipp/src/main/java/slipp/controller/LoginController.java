@@ -18,6 +18,11 @@ import slipp.support.db.DataBase;
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
+    @RequestMapping(value = "/users/loginForm", method = RequestMethod.GET)
+    public ModelAndView getLoginForm(HttpServletRequest req, HttpServletResponse resp) {
+        return new ModelAndView(new JspView("/user/login.jsp"));
+    }
+
     @RequestMapping(value = "/users/login", method = RequestMethod.POST)
     public ModelAndView login(HttpServletRequest req, HttpServletResponse resp) {
         String userId = req.getParameter("userId");
