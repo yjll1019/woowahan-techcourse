@@ -1,6 +1,6 @@
 package slipp.dao;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import nextstep.jdbc.JdbcTemplate;
@@ -13,23 +13,39 @@ public class UserDao {
         this.JDBC_TEMPLATE = new JdbcTemplate();
     }
 
-    public void insert(User user) throws SQLException {
+    public void insert(User user) {
         String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
         JDBC_TEMPLATE.updateTemplate(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
-    public void update(User user) throws SQLException {
+    public void update(User user) {
         String sql = "UPDATE USERS SET password=?, name=?, email=? WHERE userId=?";
         JDBC_TEMPLATE.updateTemplate(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
-    public List<User> findAll() throws SQLException {
+    public List<User> findAll() {
         String sql = "SELECT userId, password, name, email FROM USERS";
-        return JDBC_TEMPLATE.selectTemplate(sql, User.class);
+        return JDBC_TEMPLATE.selectTemplate(sql, (rs) -> {
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"));
+                users.add(user);
+            }
+            return users;
+        });
     }
 
-    public User findByUserId(String userId) throws SQLException {
+    public User findByUserId(String userId) {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return (User) JDBC_TEMPLATE.selectTemplate(sql, User.class, userId).get(0);
+        return JDBC_TEMPLATE.selectTemplate(sql, (rs) -> {
+            List<User> users = new ArrayList<>();
+            if (rs.next()) {
+                User user = new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"));
+                users.add(user);
+            }
+            return users;
+        }, userId).get(0);
     }
 }
