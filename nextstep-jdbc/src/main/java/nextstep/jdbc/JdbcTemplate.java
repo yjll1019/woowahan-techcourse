@@ -24,18 +24,18 @@ public class JdbcTemplate {
         return selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params));
     }
 
-    public void updateTemplate(String sql, PreparedStatementSetter pstmtSetter) {
+    public int updateTemplate(String sql, PreparedStatementSetter pstmtSetter) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmtSetter.setValues(pstmt);
-            pstmt.executeUpdate();
+            return pstmt.executeUpdate();
         } catch (Exception e) {
             throw new UpdateQueryFailException();
         }
     }
 
-    public void updateTemplate(String sql, Object... params) {
-        updateTemplate(sql, (pstmt) -> setValues(pstmt, params));
+    public int updateTemplate(String sql, Object... params) {
+        return updateTemplate(sql, (pstmt) -> setValues(pstmt, params));
     }
 
     private PreparedStatement setValues(PreparedStatement pstmt, Object... params) throws SQLException {
