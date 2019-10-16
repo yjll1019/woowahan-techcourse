@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import nextstep.jdbc.exception.SelectQueryFailException;
+import nextstep.jdbc.exception.UpdateQueryFailException;
+
 public class JdbcTemplate {
     public <T> List<T> selectTemplate(String sql, PreparedStatementSetter pstmtSetter, RowMapper rowMapper) {
         try (Connection con = ConnectionManager.getConnection();
