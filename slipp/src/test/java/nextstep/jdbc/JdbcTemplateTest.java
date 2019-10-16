@@ -79,8 +79,8 @@ class JdbcTemplateTest {
     void select_with_prepared_statement_setter_for_object() {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"))),
+        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> new User(rs.getString("userId"),
+                        rs.getString("password"), rs.getString("name"), rs.getString("email"))),
                 ((pstmt) -> pstmt.setString(1, expectedUser.getUserId()))).get(0);
 
         assertThat(actual).isEqualTo(expectedUser);
@@ -91,8 +91,8 @@ class JdbcTemplateTest {
     void select_with_variable_argument_for_object() {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> (new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email")))),
+        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> (new User(rs.getString("userId"),
+                        rs.getString("password"), rs.getString("name"), rs.getString("email")))),
                 expectedUser.getUserId()).get(0);
 
         assertThat(actual).isEqualTo(expectedUser);
@@ -103,10 +103,8 @@ class JdbcTemplateTest {
     void select_with_prepared_statement_setter() {
         String sql = "SELECT userId, password, name, email FROM USERS";
 
-        List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
-            return new User(rs.getString("userId"), rs.getString("password"),
-                    rs.getString("name"), rs.getString("email"));
-        }));
+        List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> new User(rs.getString("userId"),
+                rs.getString("password"), rs.getString("name"), rs.getString("email"))));
 
         assertThat(actual.size()).isGreaterThanOrEqualTo(2);
     }
