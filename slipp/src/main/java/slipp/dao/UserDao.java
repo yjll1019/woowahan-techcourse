@@ -35,29 +35,28 @@ public class UserDao {
 
     public List<User> findAll() {
         String sql = "SELECT userId, password, name, email FROM USERS";
-        return JDBC_TEMPLATE.selectTemplate(sql, (pstmt) -> {}, (rs) -> {
+        return JDBC_TEMPLATE.selectTemplate(sql, ((rs) -> {
             List<User> users = new ArrayList<>();
-            while(rs.next()) {
+            while (rs.next()) {
                 User user = new User(rs.getString("userId"), rs.getString("password"),
                         rs.getString("name"), rs.getString("email"));
                 users.add(user);
             }
             return users;
+        }), (pstmt) -> {
         });
     }
 
     public User findByUserId(String userId) {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return JDBC_TEMPLATE.<User>selectTemplate(sql,
-                (pstmt) -> pstmt.setString(1, userId),
-                (rs) -> {
-                    List<User> users = new ArrayList<>();
-                    if(rs.next()) {
-                        User user = new User(rs.getString("userId"), rs.getString("password"),
-                                rs.getString("name"), rs.getString("email"));
-                        users.add(user);
-                    }
-                    return users;
-                }).get(0);
+        return JDBC_TEMPLATE.selectTemplate(sql, ((rs) -> {
+            List<User> users = new ArrayList<>();
+            if (rs.next()) {
+                User user = new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"));
+                users.add(user);
+            }
+            return users;
+        }), ((pstmt) -> pstmt.setString(1, userId))).get(0);
     }
 }

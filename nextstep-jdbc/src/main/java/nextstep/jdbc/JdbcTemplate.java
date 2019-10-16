@@ -10,7 +10,7 @@ import nextstep.jdbc.exception.SelectQueryFailException;
 import nextstep.jdbc.exception.UpdateQueryFailException;
 
 public class JdbcTemplate {
-    public <T> List<T> selectTemplate(String sql, PreparedStatementSetter pstmtSetter, RowMapper rowMapper) {
+    public <T> List<T> selectTemplate(String sql, RowMapper<T> rowMapper, PreparedStatementSetter pstmtSetter) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = setValues(con.prepareStatement(sql), pstmtSetter);
              ResultSet rs = pstmt.executeQuery()) {
@@ -21,13 +21,7 @@ public class JdbcTemplate {
     }
 
     public <T> List<T> selectTemplate(String sql, RowMapper<T> rowMapper, Object... params) {
-        try (Connection con = ConnectionManager.getConnection();
-             PreparedStatement pstmt = setValues(con.prepareStatement(sql), params);
-             ResultSet rs = pstmt.executeQuery()) {
-            return rowMapper.mapRows(rs);
-        } catch (Exception e) {
-            throw new SelectQueryFailException();
-        }
+        return selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params));
     }
 
     public void updateTemplate(String sql, PreparedStatementSetter pstmtSetter) {
@@ -41,12 +35,7 @@ public class JdbcTemplate {
     }
 
     public void updateTemplate(String sql, Object... params) {
-        try (Connection con = ConnectionManager.getConnection();
-             PreparedStatement pstmt = setValues(con.prepareStatement(sql), params)) {
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            throw new UpdateQueryFailException();
-        }
+        updateTemplate(sql, (pstmt) -> setValues(pstmt, params));
     }
 
     private PreparedStatement setValues(PreparedStatement pstmt, Object... params) throws SQLException {
