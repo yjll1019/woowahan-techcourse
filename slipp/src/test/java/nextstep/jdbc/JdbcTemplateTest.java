@@ -45,7 +45,7 @@ class JdbcTemplateTest {
 
         String userFindSql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actualUser = jdbcTemplate.selectTemplate(userFindSql, ((rs) -> {
+        User actualUser = jdbcTemplate.selectTemplateForObject(userFindSql, ((rs) -> {
             List<User> users = new ArrayList<>();
             if (rs.next()) {
                 User actual = new User(rs.getString("userId"), rs.getString("password"),
@@ -53,7 +53,7 @@ class JdbcTemplateTest {
                 users.add(actual);
             }
             return users;
-        }), ((pstmt) -> pstmt.setString(1, user.getUserId()))).get(0);
+        }), ((pstmt) -> pstmt.setString(1, user.getUserId())));
 
         assertThat(actualUser).isEqualTo(user);
     }
@@ -74,7 +74,7 @@ class JdbcTemplateTest {
 
         String userFindSql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actualUser = jdbcTemplate.selectTemplate(userFindSql, ((rs) -> {
+        User actualUser = jdbcTemplate.selectTemplateForObject(userFindSql, ((rs) -> {
             List<User> users = new ArrayList<>();
             if (rs.next()) {
                 User actual = new User(rs.getString("userId"), rs.getString("password"),
@@ -82,14 +82,14 @@ class JdbcTemplateTest {
                 users.add(actual);
             }
             return users;
-        }), user.getUserId()).get(0);
+        }), user.getUserId());
 
         assertThat(actualUser).isEqualTo(user);
     }
 
     @Test
-    @DisplayName("PreparedStatementSetter를 이용한 select 쿼리문 실행")
-    void select_with_prepared_statement_setter() {
+    @DisplayName("PreparedStatementSetter를 이용하여 하나의 object를 조회하는 select 쿼리문 실행")
+    void select_with_prepared_statement_setter_for_object() {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
         User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
@@ -106,8 +106,8 @@ class JdbcTemplateTest {
     }
 
     @Test
-    @DisplayName("가변인자를 이용한 select 쿼리문 실행")
-    void select_with_variable_argument() {
+    @DisplayName("가변인자를 이용하여 하나의 object를 조회하는 쿼리문 실행")
+    void select_with_variable_argument_for_object() {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
         User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
@@ -121,6 +121,42 @@ class JdbcTemplateTest {
         }), expectedUser.getUserId()).get(0);
 
         assertThat(actual).isEqualTo(expectedUser);
+    }
+
+    @Test
+    @DisplayName("PreparedStatementSetter를 이용하여 여러 개의 object를 조회하는 select 쿼리문 실행")
+    void select_with_prepared_statement_setter() {
+        String sql = "SELECT userId, password, name, email FROM USERS";
+
+        List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"));
+                users.add(user);
+            }
+            return users;
+        }));
+
+        assertThat(actual.size()).isGreaterThanOrEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("가변인자를 이용하여 여러 개의 object를 조회하는 쿼리문 실행")
+    void select_with_variable_argument() {
+        String sql = "SELECT userId, password, name, email FROM USERS";
+
+        List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"));
+                users.add(user);
+            }
+            return users;
+        }));
+
+        assertThat(actual.size()).isGreaterThanOrEqualTo(2);
     }
 
     @Test

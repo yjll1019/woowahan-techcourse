@@ -24,6 +24,14 @@ public class JdbcTemplate {
         return selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params));
     }
 
+    public <T> T selectTemplateForObject(String sql, RowMapper<T> rowMapper, PreparedStatementSetter pstmtSetter) {
+        return selectTemplate(sql, rowMapper, pstmtSetter).get(0);
+    }
+
+    public <T> T selectTemplateForObject(String sql, RowMapper<T> rowMapper, Object... params) {
+        return selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params)).get(0);
+    }
+
     public int updateTemplate(String sql, PreparedStatementSetter pstmtSetter) {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {

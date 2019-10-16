@@ -49,7 +49,7 @@ public class UserDao {
 
     public User findByUserId(String userId) {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return jdbcTemplate.selectTemplate(sql, ((rs) -> {
+        return jdbcTemplate.selectTemplateForObject(sql, ((rs) -> {
             List<User> users = new ArrayList<>();
             if (rs.next()) {
                 User user = new User(rs.getString("userId"), rs.getString("password"),
@@ -57,6 +57,6 @@ public class UserDao {
                 users.add(user);
             }
             return users;
-        }), ((pstmt) -> pstmt.setString(1, userId))).get(0);
+        }), ((pstmt) -> pstmt.setString(1, userId)));
     }
 }
