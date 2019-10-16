@@ -1,6 +1,5 @@
 package slipp.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import nextstep.jdbc.JdbcTemplate;
@@ -35,28 +34,16 @@ public class UserDao {
 
     public List<User> findAll() {
         String sql = "SELECT userId, password, name, email FROM USERS";
-        return jdbcTemplate.selectTemplate(sql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            while (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(user);
-            }
-            return users;
-        }), (pstmt) -> {
-        });
+        return jdbcTemplate.selectTemplate(sql, ((rs) -> new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"))),
+                (pstmt) -> {
+                });
     }
 
     public User findByUserId(String userId) {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return jdbcTemplate.selectTemplateForObject(sql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(user);
-            }
-            return users;
-        }), ((pstmt) -> pstmt.setString(1, userId)));
+        return jdbcTemplate.selectTemplateForObject(sql, ((rs) -> new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"))),
+                ((pstmt) -> pstmt.setString(1, userId)));
     }
 }

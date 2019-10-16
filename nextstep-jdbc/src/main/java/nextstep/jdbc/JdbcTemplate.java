@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import nextstep.jdbc.exception.SelectQueryFailException;
@@ -14,7 +15,11 @@ public class JdbcTemplate {
         try (Connection con = ConnectionManager.getConnection();
              PreparedStatement pstmt = setValues(con.prepareStatement(sql), pstmtSetter);
              ResultSet rs = pstmt.executeQuery()) {
-            return rowMapper.mapRows(rs);
+            List<T> results = new ArrayList<>();
+            while (rs.next()) {
+                results.add(rowMapper.mapRows(rs));
+            }
+            return results;
         } catch (Exception e) {
             throw new SelectQueryFailException();
         }

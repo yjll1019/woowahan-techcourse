@@ -1,6 +1,5 @@
 package nextstep.jdbc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -45,15 +44,9 @@ class JdbcTemplateTest {
 
         String userFindSql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actualUser = jdbcTemplate.selectTemplateForObject(userFindSql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            if (rs.next()) {
-                User actual = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(actual);
-            }
-            return users;
-        }), ((pstmt) -> pstmt.setString(1, user.getUserId())));
+        User actualUser = jdbcTemplate.selectTemplateForObject(userFindSql, ((rs) -> new User(rs.getString("userId"),
+                        rs.getString("password"), rs.getString("name"), rs.getString("email"))),
+                ((pstmt) -> pstmt.setString(1, user.getUserId())));
 
         assertThat(actualUser).isEqualTo(user);
     }
@@ -74,15 +67,9 @@ class JdbcTemplateTest {
 
         String userFindSql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actualUser = jdbcTemplate.selectTemplateForObject(userFindSql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            if (rs.next()) {
-                User actual = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(actual);
-            }
-            return users;
-        }), user.getUserId());
+        User actualUser = jdbcTemplate.selectTemplateForObject(userFindSql, ((rs) -> new User(rs.getString("userId"),
+                rs.getString("password"), rs.getString("name"),
+                rs.getString("email"))), user.getUserId());
 
         assertThat(actualUser).isEqualTo(user);
     }
@@ -92,15 +79,9 @@ class JdbcTemplateTest {
     void select_with_prepared_statement_setter_for_object() {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(user);
-            }
-            return users;
-        }), ((pstmt) -> pstmt.setString(1, expectedUser.getUserId()))).get(0);
+        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email"))),
+                ((pstmt) -> pstmt.setString(1, expectedUser.getUserId()))).get(0);
 
         assertThat(actual).isEqualTo(expectedUser);
     }
@@ -110,15 +91,9 @@ class JdbcTemplateTest {
     void select_with_variable_argument_for_object() {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
 
-        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            if (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(user);
-            }
-            return users;
-        }), expectedUser.getUserId()).get(0);
+        User actual = jdbcTemplate.selectTemplate(sql, ((rs) -> (new User(rs.getString("userId"), rs.getString("password"),
+                        rs.getString("name"), rs.getString("email")))),
+                expectedUser.getUserId()).get(0);
 
         assertThat(actual).isEqualTo(expectedUser);
     }
@@ -129,13 +104,8 @@ class JdbcTemplateTest {
         String sql = "SELECT userId, password, name, email FROM USERS";
 
         List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            while (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(user);
-            }
-            return users;
+            return new User(rs.getString("userId"), rs.getString("password"),
+                    rs.getString("name"), rs.getString("email"));
         }));
 
         assertThat(actual.size()).isGreaterThanOrEqualTo(2);
@@ -146,15 +116,8 @@ class JdbcTemplateTest {
     void select_with_variable_argument() {
         String sql = "SELECT userId, password, name, email FROM USERS";
 
-        List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> {
-            List<User> users = new ArrayList<>();
-            while (rs.next()) {
-                User user = new User(rs.getString("userId"), rs.getString("password"),
-                        rs.getString("name"), rs.getString("email"));
-                users.add(user);
-            }
-            return users;
-        }));
+        List<User> actual = jdbcTemplate.selectTemplate(sql, ((rs) -> (new User(rs.getString("userId"),
+                rs.getString("password"), rs.getString("name"), rs.getString("email")))));
 
         assertThat(actual.size()).isGreaterThanOrEqualTo(2);
     }
