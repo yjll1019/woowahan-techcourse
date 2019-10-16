@@ -2,11 +2,11 @@ package slipp.dao;
 
 import java.util.List;
 
+import nextstep.jdbc.ConnectionManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import slipp.domain.User;
 import slipp.dto.UserUpdatedDto;
-import nextstep.jdbc.ConnectionManager;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
