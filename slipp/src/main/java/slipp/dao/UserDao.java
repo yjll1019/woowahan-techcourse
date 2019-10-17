@@ -1,6 +1,7 @@
 package slipp.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import nextstep.jdbc.JdbcTemplate;
 import slipp.domain.User;
@@ -40,7 +41,7 @@ public class UserDao {
                 });
     }
 
-    public User findByUserId(String userId) {
+    public Optional<User> findByUserId(String userId) {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
         return jdbcTemplate.selectTemplateForObject(sql, ((rs) -> new User(rs.getString("userId"), rs.getString("password"),
                         rs.getString("name"), rs.getString("email"))),

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import nextstep.jdbc.exception.SelectQueryFailException;
 import nextstep.jdbc.exception.UpdateQueryFailException;
@@ -29,12 +30,12 @@ public class JdbcTemplate {
         return selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params));
     }
 
-    public <T> T selectTemplateForObject(String sql, RowMapper<T> rowMapper, PreparedStatementSetter pstmtSetter) {
-        return selectTemplate(sql, rowMapper, pstmtSetter).get(0);
+    public <T> Optional<T> selectTemplateForObject(String sql, RowMapper<T> rowMapper, PreparedStatementSetter pstmtSetter) {
+        return Optional.of(selectTemplate(sql, rowMapper, pstmtSetter).get(0));
     }
 
-    public <T> T selectTemplateForObject(String sql, RowMapper<T> rowMapper, Object... params) {
-        return selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params)).get(0);
+    public <T> Optional<T> selectTemplateForObject(String sql, RowMapper<T> rowMapper, Object... params) {
+        return Optional.of(selectTemplate(sql, rowMapper, (pstmt) -> setValues(pstmt, params)).get(0));
     }
 
     public int updateTemplate(String sql, PreparedStatementSetter pstmtSetter) {
