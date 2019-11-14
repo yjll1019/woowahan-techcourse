@@ -4,8 +4,6 @@ import nextstep.jdbc.ConnectionManager;
 import nextstep.jdbc.JdbcTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +48,8 @@ public class QueryTest {
     }
 
     @Test
-    void test() {
-        String query =  "select devType, round(avg(years), 1) as percent\n" +
+    void getYearsOfProfessionalCodingExperience() {
+        String query = "select devType, round(avg(years), 1) as percent\n" +
                 "from (\n" +
                 "select\n" +
                 "\tcast(YearsCodingProf as UNSIGNED) as years,\n" +
